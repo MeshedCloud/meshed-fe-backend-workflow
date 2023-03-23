@@ -44,6 +44,7 @@
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "@ant-design/pro-components": "^2.3.13",
+    "@antv/xflow": "^1.0.54",
     "@umijs/route-utils": "^2.1.3",
     "antd": "^4.23.3",
     "classnames": "^2.3.2",

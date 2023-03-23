@@ -17,7 +17,7 @@ sidemenu: false
 /**
  * background: '#f0f2f5'
  */
-import Footer from '@/components/Footer';
+import Footer from '@/config/Footer';
 
 export default () => <Footer />;
 ```
@@ -30,7 +30,7 @@ HeaderDropdown 是 antd Dropdown 的封装，但是增加了移动端的特殊�
 /**
  * background: '#f0f2f5'
  */
-import HeaderDropdown from '@/components/HeaderDropdown';
+import HeaderDropdown from '@/config/HeaderDropdown';
 import { Button, Menu } from 'antd';
 
 export default () => {
@@ -58,7 +58,7 @@ export default () => {
 /**
  * background: '#f0f2f5'
  */
-import HeaderSearch from '@/components/HeaderSearch';
+import HeaderSearch from '@/config/HeaderSearch';
 
 export default () => {
   return (
@@ -108,7 +108,7 @@ export default () => {
 /**
  * background: '#f0f2f5'
  */
-import NoticeIcon from '@/components/NoticeIcon/NoticeIcon';
+import NoticeIcon from '@/config/NoticeIcon/NoticeIcon';
 import { message } from 'antd';
 
 export default () => {

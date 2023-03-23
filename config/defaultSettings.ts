@@ -10,14 +10,14 @@ const Settings: LayoutSettings & {
   navTheme: 'light',
   // 拂晓蓝
   colorPrimary: '#1890ff',
-  layout: 'side',
+  layout: 'mix',
   contentWidth: 'Fluid',
   fixedHeader: false,
   fixSiderbar: true,
   colorWeak: false,
-  title: '流程平台',
+  title: '流程中心',
   pwa: false,
-  logo: 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
+  logo: 'http://s.meshed.cn/meshed/svg/logo-no-background.svg',
   iconfontUrl: '',
 };
 
