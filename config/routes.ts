@@ -5,7 +5,8 @@ export default [
     routes: [{ name: '登录', path: '/user/login', component: './User/Login' }],
   },
   { path: '/welcome', name: '欢迎', icon: 'smile', component: './Welcome' },
-  { path: '/Flow', name: '工作流设计器', icon: 'smile', component: './Flow' },
+  { path: '/flow', name: '工作流设计器', icon: 'smile', component: './Flow' },
+  { path: '/form/designable',layout: false, name: '表单设计器', icon: 'smile', component: './Designable' },
   {
     path: '/admin',
     name: '管理页',
