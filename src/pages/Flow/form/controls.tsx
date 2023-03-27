@@ -18,12 +18,38 @@ export const getDefaultControls = (): NsJsonSchemaForm.ISchema => {
   }
 }
 
-export const getStartControls = (): NsJsonSchemaForm.ISchema => {
+export const getStartControls = (schema: NsJsonSchemaForm.TargetData): NsJsonSchemaForm.ISchema => {
+  // @ts-ignore
+  const {formkey, dataType, assignee, candidateUsers, candidateGroups, skipExpression, dynamicExpression} = schema
   return {
     tabs: [
       {
         name: '开始事件',
-        groups: [],
+        groups: [
+          {
+            name: 'StartEvent',
+            controls: [
+              {
+                label: '主表单',
+                tooltip: '挂载流程主要表单',
+                placeholder: '请选择表单',
+                name: 'formKey',
+                value: formkey,
+                shape: ControlShapeEnum.CUSTOM_SELECT,
+                options: [{
+                  title: 'OA请假表',
+                  value: "assignee",
+                }, {
+                  title: '候选人',
+                  value: "candidateUsers",
+                }, {
+                  title: '候选组',
+                  value: "candidateGroups",
+                }]
+              },
+            ],
+          },
+        ],
       },
     ],
   }
@@ -43,7 +69,7 @@ export const getEndControls = (): NsJsonSchemaForm.ISchema => {
 
 export const getApproveControls = (schema: NsJsonSchemaForm.TargetData): NsJsonSchemaForm.ISchema => {
   // @ts-ignore
-  const {userType, dataType, assignee, candidateUsers, candidateGroups} = schema
+  const {userType, dataType, assignee, candidateUsers, candidateGroups, skipExpression, dynamicExpression} = schema
   return {
     tabs: [
       {
@@ -164,6 +190,38 @@ export const getApproveControls = (schema: NsJsonSchemaForm.TargetData): NsJsonS
                   value: "devops",
                 }]
               },
+              {
+                label: '动态表达式',
+                tooltip: '可以从候选组中选择参与角色来完成任务',
+                placeholder: '请选择候选组',
+                name: 'dynamicExpression',
+                value: dynamicExpression,
+                defaultValue: '#{approval}',
+                shape: ControlShapeEnum.AUTO_COMPLETE,
+                required: true,
+                // 联动规则
+                dependencies: [
+                  {
+                    name: 'dataType', condition: 'dynamic', disabled: false, hidden: false
+                  },
+                  {
+                    name: 'dataType', condition: 'fixed', disabled: false, hidden: true
+                  },
+                ],
+                options: [{
+                  title: '默认',
+                  value: "#{approval}",
+                }]
+              },
+              {
+                label: '跳过表达式',
+                tooltip: '跳过条件',
+                placeholder: '请输入跳过条件的EL表达式',
+                name: 'skipExpression',
+                value: skipExpression,
+                shape: 'input',
+                required: false,
+              },
             ],
           },
         ],
@@ -222,7 +280,7 @@ export const getParallelGatewayControls = (): NsJsonSchemaForm.ISchema => {
 
 export const getConditionControls = (schema: NsJsonSchemaForm.TargetData): NsJsonSchemaForm.ISchema => {
   // @ts-ignore
-  const {expression} = schema;
+  const {conditionExpression} = schema;
   return {
     tabs: [
       {
@@ -235,8 +293,8 @@ export const getConditionControls = (schema: NsJsonSchemaForm.TargetData): NsJso
                 label: '条件表达式',
                 tooltip: '流程跳转条件,其中变量通过API调用传递或者表单中填写',
                 placeholder: '请输入跳转条件的EL表达式',
-                name: 'expression',
-                value: expression,
+                name: 'conditionExpression',
+                value: conditionExpression,
                 shape: 'input',
                 required: true,
               },
@@ -247,6 +305,34 @@ export const getConditionControls = (schema: NsJsonSchemaForm.TargetData): NsJso
     ],
   }
 }
+export const getEdgeControls = (schema: NsJsonSchemaForm.TargetData): NsJsonSchemaForm.ISchema => {
+  // @ts-ignore
+  const {conditionExpression} = schema;
+  return {
+    tabs: [
+      {
+        name: '条件配置',
+        groups: [
+          {
+            name: 'edge',
+            controls: [
+              {
+                label: '条件表达式',
+                tooltip: '流程跳转条件,其中变量通过API调用传递或者表单中填写',
+                placeholder: '请输入跳转条件的EL表达式',
+                name: 'conditionExpression',
+                value: conditionExpression,
+                shape: 'input',
+                required: true,
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  }
+}
+
 export const getMailControls = (): NsJsonSchemaForm.ISchema => {
   return {
     tabs: [

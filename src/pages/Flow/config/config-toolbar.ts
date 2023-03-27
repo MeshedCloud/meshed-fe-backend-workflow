@@ -10,7 +10,7 @@ import {
   NsGraphCmd,
   NsNodeCmd,
   IconStore,
-  MODELS,
+  MODELS, NsGraph,
 } from '@antv/xflow'
 import {
   UngroupOutlined,
@@ -24,7 +24,9 @@ import {
   CopyOutlined,
   SnippetsOutlined,
 } from '@ant-design/icons'
-
+import {cloneDeep} from "lodash";
+import {success, tips} from "@/common/messages";
+import {saveFlowDesigner} from "@/services/flow/api";
 const GROUP_NODE_RENDER_ID = 'GROUP_NODE_RENDER_ID'
 
 export namespace TOOLBAR_ITEMS {
@@ -184,6 +186,34 @@ namespace NSToolbarConfig {
       },
     })
 
+    function simplifyEdge(edges: any[]) {
+      edges.forEach((edge: any,index) => {
+        edge.data = undefined
+        edge.attrs = undefined
+        edge.labels = []
+      })
+    }
+
+    function simplify(graphData: NsGraph.IGraphData) {
+      const graph = cloneDeep(graphData);
+      graph.nodes.forEach((node: any) => {
+        delete node.originData;
+        delete node.ports.groups;
+
+
+        if (node.outgoingEdges) {
+          simplifyEdge(node.outgoingEdges);
+        }
+        if (node.incomingEdges) {
+          simplifyEdge(node.incomingEdges);
+        }
+      })
+      graph.edges.forEach((edge: any) => {
+        delete edge.data;
+      })
+      return graph;
+    }
+
     /** 保存数据 */
     toolbarGroup.push({
       tooltip: '保存',
@@ -195,13 +225,26 @@ namespace NSToolbarConfig {
           {
             // @ts-ignore
             saveGraphDataService: (meta, graphData) => {
-              console.log(graphData)
+              console.log(meta)
+              if (meta.type == 'edit'){
+                //简化数据
+                const graph = simplify(graphData);
+                console.log(JSON.stringify(graph))
+                saveFlowDesigner({flowId: meta.flowId,graph:JSON.stringify(graph)}).then(res =>{
+                  success(res,"保存成功")
+                })
+                //保存
+              } else {
+                tips("查看状态不能保存")
+              }
               return graphData
             },
           },
         )
       },
     })
+
+
     return [
       {
         name: 'graphData',

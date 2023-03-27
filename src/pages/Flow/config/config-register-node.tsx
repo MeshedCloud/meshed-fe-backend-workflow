@@ -5,7 +5,7 @@ import {ExclusiveGatewayNode} from "@/pages/Flow/node/exclusive-gateway";
 import {ParallelGatewayNode} from "@/pages/Flow/node/parallel-gateway";
 import {MailNode} from "@/pages/Flow/node/mail";
 import {InitiatorNode} from "@/pages/Flow/node/initiator";
-import {ConditionNode} from "@/pages/Flow/node/condition";
+// import {ConditionNode} from "@/pages/Flow/node/condition";
 
 export const registerNode = [{
   key: "base",
@@ -64,14 +64,14 @@ export const registerNode = [{
       height: 65,
       label: '并行网关',
     },
-    {
-      component: ConditionNode,
-      popover: () => <div>条件</div>,
-      name: 'condition',
-      width: 210,
-      height: 65,
-      label: '条件',
-    },
+    // {
+    //   component: ConditionNode,
+    //   popover: () => <div>条件</div>,
+    //   name: 'condition',
+    //   width: 210,
+    //   height: 65,
+    //   label: '条件',
+    // },
   ],
 },
   {

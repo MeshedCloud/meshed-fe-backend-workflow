@@ -1,11 +1,11 @@
-import {JsonSchemaForm, NsGraph, NsNodeCmd, XFlowNodeCommands} from '@antv/xflow'
+import {JsonSchemaForm, NsEdgeCmd, NsGraph, NsNodeCmd, XFlowEdgeCommands, XFlowNodeCommands} from '@antv/xflow'
 import { set } from 'lodash'
 import {NsJsonSchemaForm} from "@antv/xflow-extension/es/canvas-json-schema-form";
 import {Cell} from "@antv/x6";
 import {IGraphCommandService, IModelService} from "@antv/xflow-core";
 import {
   getApproveControls, getConditionControls,
-  getDefaultControls, getEndControls, getExclusiveGatewayControls,
+  getDefaultControls, getEdgeControls, getEndControls, getExclusiveGatewayControls,
   getMailControls,
   getParallelGatewayControls,
   getStartControls
@@ -21,17 +21,25 @@ export const formValueUpdateService: NsJsonSchemaForm.IFormValueUpdateService = 
       { nodeConfig: node },
     )
   }
+  const updateEdge = (edge: NsGraph.IEdgeConfig) => {
+    return commandService.executeCommand<NsEdgeCmd.UpdateEdge.IArgs>(
+      XFlowEdgeCommands.UPDATE_EDGE.id,
+      // @ts-ignore
+      { edgeConfig: edge },
+    )
+  }
   // @ts-ignore
-  const nodeConfig: NsGraph.INodeConfig = {
+  const data = {
     ...targetData,
   }
   allFields.forEach(val => {
-    set(nodeConfig, val.name, val.value)
+    set(data, val.name, val.value)
   })
-  await updateNode(nodeConfig);
-
-
-  console.log('nodeConfig: 更新后', nodeConfig)
+  if (args.targetType === 'edge') {
+    updateEdge(data as NsGraph.IEdgeConfig)
+  } else if (args.targetType === 'node') {
+    updateNode(data as NsGraph.INodeConfig)
+  }
 }
 
 const formSchemaService = async (args: {
@@ -75,14 +83,15 @@ const formSchemaService = async (args: {
   if (isGroup) {
     // TODO
   }
+  console.log("args",args)
   if (targetType === 'edge') {
-    // TODO
+    return getEdgeControls(targetData)
   }
   if (targetType === 'node') {
 
     switch (renderKey) {
       case 'startEvent':
-        return getStartControls();
+        return getStartControls(targetData);
       case 'endEvent':
         return getEndControls();
       case 'userTask':
@@ -105,6 +114,7 @@ const formSchemaService = async (args: {
 export const CustomFlowchartFormPanel = () => {
   return (
     <JsonSchemaForm
+      targetType={['node', 'edge', 'canvas']}
       controlMapService={controlMapService}
       formSchemaService={formSchemaService}
       formValueUpdateService={formValueUpdateService}
