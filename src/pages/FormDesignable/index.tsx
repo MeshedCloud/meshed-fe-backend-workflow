@@ -163,7 +163,8 @@ const FormDesignable: React.FC = () => {
           <CompositePanel.Item title="panels.OutlinedTree" icon="Outline">
             <OutlineTreeWidget/>
           </CompositePanel.Item>
-          <CompositePanel.Item title="panels.History" icon="History">
+          <CompositePanel.Item
+            title="panels.History" icon="History">
             <HistoryWidget/>
           </CompositePanel.Item>
         </CompositePanel>

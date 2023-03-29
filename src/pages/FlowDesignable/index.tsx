@@ -44,6 +44,7 @@ import {initGraphCmds} from "@/pages/FlowDesignable/config/graph-cmd";
 
 import {useMatch} from "@@/exports";
 import {getFormSelect} from "@/services/form/api";
+import {getRoleSelect, getUserSelect} from "@/services/user/api";
 
 export interface IProps {
   meta: { flowId: string }
@@ -66,6 +67,26 @@ const FlowDesigner: React.FC<IProps> = props => {
       })
     })
     sessionStorage.setItem("formSelect", JSON.stringify(options));
+  })
+  getUserSelect({}).then(list => {
+    const options: any[] = []
+    list.forEach(item => {
+      options.push({
+        title: item.label,
+        value: item.value
+      })
+    })
+    sessionStorage.setItem("userSelect", JSON.stringify(options));
+  })
+  getRoleSelect({}).then(list => {
+    const options: any[] = []
+    list.forEach(item => {
+      options.push({
+        title: item.label,
+        value: item.value
+      })
+    })
+    sessionStorage.setItem("roleSelect", JSON.stringify(options));
   })
   const toolbarConfig = useToolbarConfig()
   const menuConfig = useMenuConfig()

@@ -2,38 +2,26 @@ import {
   PageContainer, ProList,
 } from '@ant-design/pro-components';
 import '@umijs/max';
-import React from 'react';
-import {copyDefinition, getDefinitionList, updateInvertedDefinitionState} from "@/services/flow/api";
-import {Button, Dropdown, MenuProps, message, Space, Tag, Tooltip} from 'antd';
+import React, {useState} from 'react';
+import {copyDefinition, getDefinitionList, initiateFlow, updateInvertedDefinitionState} from "@/services/flow/api";
+import {Button, message, Space, Tag, Tooltip} from 'antd';
 import {
-  CodeSandboxOutlined, DeleteOutlined, FormOutlined,
-  MoreOutlined,
+  EyeOutlined, FormOutlined,
   PauseCircleOutlined,
   PlayCircleOutlined,
-  QuestionCircleOutlined
+  QuestionCircleOutlined, SendOutlined
 } from "@ant-design/icons";
 import DraftListForm from "@/pages/Definition/components/DraftListForm";
 import DraftForm from "@/pages/Definition/components/DraftForm";
 import {success, tips} from "@/common/messages";
-
-const items: MenuProps['items'] = [
-  {
-    key: 'start',
-    label: <Button size="small" type="link" icon={<DeleteOutlined />} onClick={() => {
-
-    }}>发起流程</Button>,
-  },
-  {
-    key: 'del',
-    label: <Button size="small" type="link" icon={<DeleteOutlined />} onClick={() => {
-
-    }}>销毁流程</Button>,
-  },
-];
+import { ModalSchema } from '@/components/Schema/ModalSchema';
+import {getFormSchemaByKey} from "@/services/form/api";
+import ConfirmButton from "@/components/ConfirmButton";
 
 const Definition: React.FC = () => {
+  const [activeKey, setActiveKey] = useState<React.Key | undefined>('ACTIVATE');
 
-
+  // @ts-ignore
   return (
     <PageContainer>
       <ProList<any>
@@ -98,14 +86,32 @@ const Definition: React.FC = () => {
           actions: {
             cardActionProps: 'actions',
             render: (text, row) => [
-              <Button size="small" type="link" icon={<CodeSandboxOutlined />} onClick={() => {
+              <ModalSchema
+                buttonText="发起"
+                title="发起流程" icon={<SendOutlined />} buttonType="link"
+                formId={row.id}
+                request={async formId => {
+                  return getFormSchemaByKey(formId);
+                }}
+                onFinish={async (formId, formData) => {
+                  const res = await initiateFlow({
+                    formKey: formId,
+                    param: formData
+                  })
+                  success(res,"发起成功")
+                  return res.success
+                }}
+              />,
+              <Button size="small" type="link" icon={<EyeOutlined />} onClick={() => {
                 tips("将在新标签打开");
                 setTimeout(() => {
                   window.open(`/workflow/flow/designable/edit/${row.id}`);
                 }, 500)
-              }}>设计</Button>,
-              <Tooltip placement="top" title={"编辑将创建副本在草稿箱中进行编辑"} >
-                <Button size="small" type="link" icon={<FormOutlined />} onClick={async () => {
+              }}>查看</Button>,
+              <ConfirmButton
+                label="编辑" hint="确定创建副本草稿编辑？" size="small" type="link" tip="编辑将创建副本在草稿箱中进行编辑"
+                icon={<FormOutlined/>}
+                onConfirm={async e => {
                   const res = await copyDefinition(row.id)
                   if (res.success && res.data){
                     message.success("副本创建成功，将在新标签打开设计页面");
@@ -113,41 +119,55 @@ const Definition: React.FC = () => {
                       window.open(`/workflow/flow/designable/edit/${res.data}`);
                     }, 500)
                   }
-
-                }}>编辑</Button>
-              </Tooltip>
-              ,
-              <Button hidden={!row.isSuspended} size="small" type="link" icon={<PlayCircleOutlined />} onClick={async () => {
-                const res = await updateInvertedDefinitionState(row.id)
-                success(res)
-              }}>激活</Button>,
-              <Button hidden={row.isSuspended} size="small" type="link" icon={<PauseCircleOutlined />} onClick={async () => {
-                const res = await updateInvertedDefinitionState(row.id)
-                success(res)
-              }}>挂起</Button>,
-              <Dropdown menu={{ items }} placement="top" arrow>
-                <Button size="small" type="link" icon={<MoreOutlined />} onClick={() => {
-
-                }}>更多</Button>
-              </Dropdown>
-
+                }}
+              />,
+              <ConfirmButton
+                label="激活" hint="确定激活流程？" size="small" type="link" tip="激活流程"
+                icon={<PlayCircleOutlined/>} hidden={!row.isSuspended}
+                onConfirm={async e => {
+                  const res = await updateInvertedDefinitionState(row.id)
+                  success(res)
+                }}
+              />,
+              <ConfirmButton
+                label="挂起" hint="确定挂起流程？" size="small" type="link" tip="挂起流程"
+                icon={<PauseCircleOutlined/>} hidden={row.isSuspended}
+                onConfirm={async e => {
+                  const res = await updateInvertedDefinitionState(row.id)
+                  success(res)
+                }}
+              />,
             ]
-          },
-          suspended: {
-            // 自己扩展的字段，主要用于筛选，不在列表中显示
-            title: '状态',
-            valueType: "select",
-            valueEnum: {
-              true: '挂起',
-              false: '正常'
-            },
-          },
+          }
         }}
-        headerTitle="流程管理"
         toolBarRender={() => [
             <DraftListForm />,
             <DraftForm />,
         ]}
+        toolbar={{
+          menu: {
+            activeKey,
+            items: [
+              {
+                key: "ACTIVATE",
+                label: '正常',
+              },
+              {
+                key: 'SUSPENDED',
+                label: '挂起',
+              }
+            ],
+            onChange(key) {
+              setActiveKey(key);
+            },
+          },
+          search: {
+            onSearch: (value: string) => {
+              alert(value);
+            },
+          }
+
+        }}
 
       />
     </PageContainer>

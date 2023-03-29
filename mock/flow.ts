@@ -273,6 +273,14 @@ const saveFlowDesigner = (req: Request, res: Response) => {
   });
 };
 
+const initiateFlow = (req: Request, res: Response) => {
+  res.json({
+    "success": true,
+    "errCode": null,
+    "errMessage": null,
+  });
+};
+
 
 const getFlowDesignableGraph = (req: Request, res: Response) => {
   res.json({
@@ -428,6 +436,7 @@ const getFlowDesignableGraph = (req: Request, res: Response) => {
 
 export default {
   'GET /api/workflow/definition/list': getDefinitionList,
+  'POST /api/workflow/flow/initiate': initiateFlow,
   'GET /api/workflow/flow/draft/list': getFlowDraftList,
   'GET /api/workflow/flow/category/select': getFlowCategoryOption,
   'POST /api/workflow/flow/draft/save': saveFlowDraft,

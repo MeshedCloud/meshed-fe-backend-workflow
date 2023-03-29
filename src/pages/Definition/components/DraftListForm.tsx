@@ -11,6 +11,7 @@ import {
 import {Draft} from "@/services/flow/definition";
 import {getFlowDraftList, publishFlowDraft} from "@/services/flow/api";
 import {success, tips} from "@/common/messages";
+import ConfirmButton from "@/components/ConfirmButton";
 
 export type Props = {
 
@@ -82,11 +83,15 @@ const DraftListForm: React.FC<Props> = (props) => {
                   window.open(`/workflow/flow/designable/edit/${row.id}`);
                 }, 500)
               }}>流程设计</Button>,
-              <Button size="small" type="link" icon={<CloudUploadOutlined />} onClick={async () => {
-                const res =await publishFlowDraft(row.id)
-                success(res)
-                actionRef.current?.reload()
-              }}>流程部署</Button>
+              <ConfirmButton
+                label="流程部署" hint="确定将该流程进行部署？" size="small" type="link" tip="流程部署到运行中"
+                icon={<CloudUploadOutlined/>}
+                onConfirm={async e => {
+                  const res =await publishFlowDraft(row.id)
+                  success(res)
+                  actionRef.current?.reload()
+                }}
+              />,
             ],
           },
         }}

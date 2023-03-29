@@ -26,8 +26,71 @@ const getAccess = () => {
   return access;
 };
 
+const getUserOption = (req: Request, res: Response) => {
+  res.json({
+    success: true,
+    errCode: null,
+    errMessage: null,
+    data: [
+      {
+        id: 1,
+        name: '张三',
+      },
+      {
+        id: 2,
+        name: '李四',
+      },
+      {
+        id: 3,
+        name: '王五',
+      },
+      {
+        id: 4,
+        name: '王朝',
+      },
+      {
+        id: 5,
+        name: '马汉',
+      },
+    ],
+  });
+};
+
+const getRoleOption = (req: Request, res: Response) => {
+  res.json({
+    success: true,
+    errCode: null,
+    errMessage: null,
+    data: [
+      {
+        id: 1,
+        name: '身份管理员',
+      },
+      {
+        id: 2,
+        name: '研发管理员',
+      },
+      {
+        id: 3,
+        name: '运维管理员',
+      },
+      {
+        id: 4,
+        name: '平台管理员',
+      },
+      {
+        id: 5,
+        name: '流程管理员',
+      },
+    ],
+  });
+};
+
 // 代码中会兼容本地 service mock 以及部署站点的静态数据
 export default {
+
+  'GET /api/iam/user/select':getUserOption,
+  'GET /api/iam/role/select':getRoleOption,
   // 支持值为 Object 和 Array
   'GET /api/currentUser': (req: Request, res: Response) => {
     if (!getAccess()) {

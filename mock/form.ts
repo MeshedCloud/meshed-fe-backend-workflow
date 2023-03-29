@@ -1,83 +1,44 @@
 import {Request, Response} from 'express';
 
-const getTaskList = (req: Request, res: Response) => {
+const getFormList = (req: Request, res: Response) => {
   res.json({
     "success": true,
     "errCode": null,
     "errMessage": null,
-    "totalCount": 6,
+    "totalCount": 3,
     "pageSize": 1,
     "pageIndex": 10,
     "data": [
       {
-        "id": "owner1:1:e6578788-cbd2-11ed-9aed-004238a4ec73",
-        "category": "Test",
+        "id": "e6578788cbd211ed9aed004238a4ec73",
+        "key": "Test1",
         "name": "name1",
         "owner": "owner1",
-        "description": null,
-        "assignee": "zhangsan",
-        "createTime": "2023年3月28日",
-        "dueDate": "2023年3月28日",
-        "claimTime": "1天"
+        "description": "Td",
+        "version": 2,
+        "status": "EDIT",
       },
       {
-        "id": "owner1:2:f87276a0-cc34-11ed-ab9d-004238a4ec73",
-        "category": "Test",
-        "name": "name1",
+        "id": "e6578788cbd211ed9aed004238a4ec73",
+        "key": "Test2",
+        "name": "name2",
         "owner": "owner1",
-        "description": null,
-        "assignee": "zhangsan",
-        "createTime": "2023年3月28日",
-        "dueDate": "2023年3月28日",
-        "claimTime": "1天"
+        "description": "Td",
+        "version": 2,
+        "status": "RUN",
       },
       {
-        "id": "oa_leave_1:1:4ad50a02-ca30-11ed-91fe-004238a4ec73",
-        "category": "Default",
-        "name": "HR审批",
-        "owner": "oa_leave_1",
-        "description": null,
-        "assignee": "zhangsan",
-        "createTime": "2023年3月28日",
-        "dueDate": "2023年3月28日",
-        "claimTime": "1天"
+        "id": "e6578788cbd211ed9aed004238a4ec73",
+        "key": "Test3",
+        "name": "name3",
+        "owner": "owner1",
+        "description": "Td",
+        "version": 2,
+        "status": "DISCARD",
       },
-      {
-        "id": "oa_leave_1:2:6ac3d2eb-ca31-11ed-95f5-004238a4ec73",
-        "category": "Default",
-        "name": "HR审批",
-        "owner": "oa_leave_1",
-        "description": "",
-        "assignee": "zhangsan",
-        "createTime": "2023年3月28日",
-        "dueDate": "2023年3月28日",
-        "claimTime": "1天"
-      },
-      {
-        "id": "oa_leave_1:3:934ba60b-ca31-11ed-a0a8-004238a4ec73",
-        "category": "xxx",
-        "name": "HR审批",
-        "owner": "oa_leave_1",
-        "description": "任务描述",
-        "assignee": "zhangsan",
-        "createTime": "2023年3月28日",
-        "dueDate": "2023年3月28日",
-        "claimTime": "1天"
-      },
-      {
-        "id": "oa_leave_1:4:c126ed65-ca33-11ed-af31-004238a4ec73",
-        "category": "xxx",
-        "name": "HR审批",
-        "owner": "oa_leave_1",
-        "description": null,
-        "assignee": "zhangsan",
-        "createTime": "2023年3月28日",
-        "dueDate": "2023年3月28日",
-        "claimTime": "1天"
-      }
     ],
     "notEmpty": true,
-    "totalPages": 6,
+    "totalPages": 1,
     "empty": false
   });
 };
@@ -95,100 +56,78 @@ const getFormSchema = (req: Request, res: Response) => {
       "schema": {
         "type": "object",
         "properties": {
-          "qnjjq0ntgmd": {
+          "name": {
             "type": "string",
-            "title": "Input",
+            "title": "姓名",
             "x-decorator": "FormItem",
             "x-component": "Input",
             "x-validator": [],
             "x-component-props": {},
             "x-decorator-props": {},
             "x-designable-id": "qnjjq0ntgmd",
-            "x-index": 0
+            "x-index": 0,
+            "name": "name"
           },
-          "v30v0qobr5n": {
+          "day": {
             "type": "number",
-            "title": "NumberPicker",
+            "title": "天数",
             "x-decorator": "FormItem",
-            "x-component": "NumberPicker",
+            "x-component": "Input",
             "x-validator": [],
             "x-component-props": {},
             "x-decorator-props": {},
             "x-designable-id": "v30v0qobr5n",
-            "x-index": 1
-          },
-          "no9co7687ly": {
-            "type": "number",
-            "title": "Rate",
-            "x-decorator": "FormItem",
-            "x-component": "Rate",
-            "x-validator": [],
-            "x-component-props": {},
-            "x-decorator-props": {},
-            "x-designable-id": "no9co7687ly",
-            "x-index": 2
-          },
-          "1vh46fto0bo": {
-            "title": "Cascader",
-            "x-decorator": "FormItem",
-            "x-component": "Cascader",
-            "x-validator": [],
-            "x-component-props": {},
-            "x-decorator-props": {},
-            "x-designable-id": "1vh46fto0bo",
-            "x-index": 3
-          },
-          "bjp2qd5w3y1": {
-            "type": "string | number",
-            "title": "Radio Group",
-            "x-decorator": "FormItem",
-            "x-component": "Radio.Group",
-            "enum": [
-              {
-                "label": "选项1",
-                "value": 1
-              },
-              {
-                "label": "选项2",
-                "value": 2
-              }
-            ],
-            "x-validator": [],
-            "x-component-props": {},
-            "x-decorator-props": {},
-            "x-designable-id": "bjp2qd5w3y1",
-            "x-index": 4
-          },
-          "aw5cnhisllc": {
-            "type": "string[]",
-            "title": "DateRangePicker",
-            "x-decorator": "FormItem",
-            "x-component": "DatePicker.RangePicker",
-            "x-designable-id": "aw5cnhisllc",
-            "x-index": 5
+            "x-index": 1,
+            "name": "day"
           }
         },
-        "x-designable-id": "eic06kesj4u"
+        "x-designable-id": "xkiy6y3wxpg"
       }
     }
   });
 };
 
-const saveForm = (req: Request, res: Response) => {
+const getFormSchemaByKey = (req: Request, res: Response) => {
   res.json({
     "success": true,
     "errCode": null,
     "errMessage": null,
-    "data": "draft_uuid29"
-  });
-};
-
-
-const saveFormSchema = (req: Request, res: Response) => {
-  res.json({
-    "success": true,
-    "errCode": null,
-    "errMessage": null,
+    "data": {
+      "form": {
+        "labelCol": 6,
+        "wrapperCol": 12
+      },
+      "schema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "姓名",
+            "x-decorator": "FormItem",
+            "x-component": "Input",
+            "x-validator": [],
+            "x-component-props": {},
+            "x-decorator-props": {},
+            "x-designable-id": "qnjjq0ntgmd",
+            "x-index": 0,
+            "name": "name"
+          },
+          "day": {
+            "type": "number",
+            "title": "天数",
+            "x-decorator": "FormItem",
+            "x-component": "Input",
+            "x-validator": [],
+            "x-component-props": {},
+            "x-decorator-props": {},
+            "x-designable-id": "v30v0qobr5n",
+            "x-index": 1,
+            "name": "day"
+          }
+        },
+        "x-designable-id": "xkiy6y3wxpg"
+      }
+    }
   });
 };
 
@@ -206,12 +145,79 @@ const getFormOption = (req: Request, res: Response) => {
 
 
 
+const saveForm = (req: Request, res: Response) => {
+  res.json({
+    "success": true,
+    "errCode": null,
+    "errMessage": null,
+    "data": "draft_uuid29"
+  });
+};
+
+const saveFormSchema = (req: Request, res: Response) => {
+  res.json({
+    "success": true,
+    "errCode": null,
+    "errMessage": null,
+  });
+};
+
+
+const copyForm = (req: Request, res: Response) => {
+  res.json({
+    "success": true,
+    "errCode": null,
+    "errMessage": null,
+    "data":"xxxxx"
+  });
+};
+
+const discardForm = (req: Request, res: Response) => {
+  res.json({
+    "success": true,
+    "errCode": null,
+    "errMessage": null,
+  });
+};
+
+const resumeForm = (req: Request, res: Response) => {
+  res.json({
+    "success": true,
+    "errCode": null,
+    "errMessage": null,
+  });
+};
+
+const publishForm = (req: Request, res: Response) => {
+  res.json({
+    "success": true,
+    "errCode": null,
+    "errMessage": null,
+  });
+};
+
+const deleteForm = (req: Request, res: Response) => {
+  res.json({
+    "success": true,
+    "errCode": null,
+    "errMessage": null,
+  });
+};
+
+
+
 export default {
-  'GET /api/workflow/task/list': getTaskList,
+  'GET /api/workflow/form/list': getFormList,
   'GET /api/workflow/form/get/schema/*': getFormSchema,
+  'GET /api/workflow/form/get/schema/key/*': getFormSchemaByKey,
   'GET /api/workflow/form/select': getFormOption,
   'POST /api/workflow/form/save': saveForm,
+  'POST /api/workflow/form/copy/*': copyForm,
   'POST /api/workflow/form/save/schema': saveFormSchema,
+  'POST /api/workflow/form/discard/*': discardForm,
+  'POST /api/workflow/form/resume/*': resumeForm,
+  'POST /api/workflow/form/publish/*': publishForm,
+  'POST /api/workflow/form/delete/*': deleteForm,
 
 
 };

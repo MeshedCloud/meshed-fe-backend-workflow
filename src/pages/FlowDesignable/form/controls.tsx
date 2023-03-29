@@ -62,6 +62,8 @@ export const getEndControls = (): NsJsonSchemaForm.ISchema => {
 export const getApproveControls = (schema: NsJsonSchemaForm.TargetData): NsJsonSchemaForm.ISchema => {
   // @ts-ignore
   const {userType, dataType, assignee, candidateUsers, candidateGroups, skipExpression, dynamicExpression} = schema
+  const userSelect = JSON.parse(sessionStorage.getItem("userSelect") as string);
+  const roleSelect = JSON.parse(sessionStorage.getItem("roleSelect") as string);
   return {
     tabs: [
       {
@@ -124,13 +126,7 @@ export const getApproveControls = (schema: NsJsonSchemaForm.TargetData): NsJsonS
                     }, disabled: false, hidden: false
                   },
                 ],
-                options: [{
-                  title: '张三',
-                  value: "zhangsan",
-                }, {
-                  title: '李四',
-                  value: "lisi",
-                }]
+                options: userSelect
               },
               {
                 label: '候选人员',
@@ -149,13 +145,7 @@ export const getApproveControls = (schema: NsJsonSchemaForm.TargetData): NsJsonS
                     }, disabled: false, hidden: false
                   },
                 ],
-                options: [{
-                  title: '张三',
-                  value: "zhangsan",
-                }, {
-                  title: '李四',
-                  value: "lisi",
-                }]
+                options: userSelect
               },
               {
                 label: '候选组',
@@ -174,13 +164,7 @@ export const getApproveControls = (schema: NsJsonSchemaForm.TargetData): NsJsonS
                     }, disabled: false, hidden: false
                   },
                 ],
-                options: [{
-                  title: '研发管理员',
-                  value: "rd-admin",
-                }, {
-                  title: '运维管理员',
-                  value: "devops",
-                }]
+                options: roleSelect
               },
               {
                 label: '动态表达式',

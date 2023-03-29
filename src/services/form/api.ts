@@ -14,11 +14,19 @@ export async function getFormList(params: {}, options?: Record<string, any>) {
 
 /** 获取表单列表 GET /api/workflow/form/get/schema/{formId} */
 export async function getFormSchema(formId: string) {
-  const res = await Request.get<string>(`/api/workflow/form/get/schema/${formId}`, {});
+  const res = await Request.get<any>(`/api/workflow/form/get/schema/${formId}`, {});
   if (res.success && res.data){
     return res.data
   }
-  return {}
+  return undefined
+}
+/** 获取表单列表 GET /api/workflow/form/get/schema/{formId} */
+export async function getFormSchemaByKey(formKey: string) {
+  const res = await Request.get<any>(`/api/workflow/form/get/schema/key/${formKey}`, {});
+  if (res.success && res.data){
+    return res.data
+  }
+  return undefined
 }
 
 
@@ -27,11 +35,38 @@ export async function saveForm(data: FormCmd) {
   return await Request.post<string>('/api/workflow/form/save', data);
 }
 
+/** 获取表单列表 GET /api/workflow/form/copy/formId */
+export async function copyForm(formId: string) {
+  const res = await Request.post<string>(`/api/workflow/form/copy/${formId}`);
+  if (res.success){
+    return res.data;
+  }
+  return undefined
+}
 
-
-/** 获取表单列表 GET /api/workflow/form/list */
+/** 获取表单列表 POST /api/workflow/form/list */
 export async function saveFormSchema(data: FormSchemaCmd) {
   return await Request.post('/api/workflow/form/save/schema', data);
+}
+
+/** 获取表单列表 POST /api/workflow/form/discard/${formId} */
+export async function discardForm(formId: string) {
+  return await Request.post(`/api/workflow/form/discard/${formId}`);
+}
+
+/** 获取表单列表 POST /api/workflow/form/delete/${formId} */
+export async function deleteForm(formId: string) {
+  return await Request.post(`/api/workflow/form/delete/${formId}`);
+}
+
+/** 获取表单列表 POST /api/workflow/form/resume/${formId} */
+export async function resumeForm(formId: string) {
+  return await Request.post(`/api/workflow/form/resume/${formId}`);
+}
+
+/** 获取表单列表 POST /api/workflow/form/publish/${formId} */
+export async function publishForm(formId: string) {
+  return await Request.post(`/api/workflow/form/publish/${formId}`);
 }
 
 /** 获取分类选项 GET /api/form/select */

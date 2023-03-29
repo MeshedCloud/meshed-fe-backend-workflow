@@ -34,7 +34,7 @@ const TaskList: React.FC = () => {
             onClick: () => {
               console.log(record);
               history.push({
-                pathname: `/task/details/${record.id}`
+                pathname: `/task/details/${record.definitionId}/${record.id}`
               })
             },
           };
@@ -92,12 +92,16 @@ const TaskList: React.FC = () => {
             activeKey,
             items: [
               {
-                key: 'TASK',
-                label: '任务列表',
+                key: 'TODO',
+                label: '待办任务',
               },
               {
-                key: 'HISTORY',
-                label: '历史任务',
+                key: 'COMPLETE',
+                label: '已办任务',
+              },
+              {
+                key: 'MY_INITIATION',
+                label: '发起记录',
               },
             ],
             onChange(key) {

@@ -4,6 +4,7 @@ import {Definition, Draft} from "@/services/flow/definition";
 import {NsGraph} from "@antv/xflow";
 import { groups } from './constant';
 import {DesignerCmd} from "@/services/flow/designer";
+import {InitiateCmd} from "@/services/flow/flow";
 
 /**
  * ==========定义===========
@@ -79,4 +80,9 @@ export async function getFlowDesignableGraph(meta: NsGraph.IGraphMeta) {
      return res.data
    }
    return {nodes:[],edges:[]}
+}
+
+/** 发起新的流程 POST /api/workflow/flow/initiate */
+export async function initiateFlow(data: InitiateCmd) {
+  return await Request.post<any>('/api/workflow/flow/initiate', data);
 }

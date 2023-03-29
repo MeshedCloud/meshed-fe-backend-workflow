@@ -1,104 +1,121 @@
-import React from "react";
-import {PageContainer, ProCard, ProList} from "@ant-design/pro-components";
+import React, {useEffect, useRef, useState} from "react";
+import {
+  ActionType,
+  PageContainer,
+  ProCard,
+  ProForm,
+  ProFormInstance,
+  ProFormTextArea,
+  ProList
+} from "@ant-design/pro-components";
 import {useMatch} from "@@/exports";
-import {Alert, Avatar, Button, Input, Space, Timeline} from "antd";
+import {Alert, Avatar, Space, Timeline} from "antd";
 import { Form } from "@formily/antd";
-import {Schema} from "@/components/Schema";
+import {Schema} from "@/components/Schema/Schema";
 import {createForm} from "@formily/core";
-
-const normalSchema = {
-  type: 'object',
-  properties: {
-    name: {
-      type: 'string',
-      title: '名称',
-      required: true,
-      'x-decorator': 'FormItem',
-      'x-component': 'Input',
-      "x-pattern": "readPretty",
-    },
-    day: {
-      type: 'string',
-      title: '天数',
-      required: true,
-      'x-decorator': 'FormItem',
-      'x-component': 'Input',
-      "x-pattern": "readPretty",
-    },
-  },
-}
+import {getFormSchema} from "@/services/form/api";
+import {agreeTask, getTaskActivityRecordList, getTaskCommentList, makeComment, refuseTask} from "@/services/task/api";
+import { ActivityRecord } from "@/services/task/task";
+import ApproveForm, {Approve} from "@/pages/Task/Details/components/ApproveForm";
+import {CheckCircleOutlined, CloseCircleOutlined} from "@ant-design/icons";
 
 export const commonForm = createForm({
   validateFirst: true,
   values:{
     name:'张三',
     day: 23
-  }
+  },
+  readPretty: true
 })
-
-const activityRecords = [
-  {
-    id:12,
-    activityName:'主管审批',
-    assigneeName: '张三',
-    message: '同意、审批通过',
-    endTime: '2023年3月28日'
-  },
-  {
-    id:13,
-    activityName:'HR审批',
-    assigneeName: '李四',
-    message: '审批通过',
-    endTime: '2023年3月28日'
-  }
-]
-
-const dataSource = [
-  {
-    id: '1',
-    name: '语雀的天空',
-    message: '我是一条测试的描述',
-  },
-  {
-    id: '2',
-    name: 'Ant Design',
-    message: '我是一条测试的描述',
-  },
-  {
-    id: '3',
-    name: '蚂蚁金服体验科技',
-    message: '我是一条测试的描述',
-  },
-  {
-    id: '4',
-    name: 'TechUI',
-    message: '我是一条测试的描述',
-  },
-];
 
 const TaskDetails: React.FC = () => {
   // @ts-ignore
-  const {params: {taskId}} = useMatch('/task/details/:taskId')
-  console.log(taskId)
+  const {params: {definitionId, taskId}} = useMatch('/task/details/:definitionId/:taskId')
+  const [schema,setSchema] = useState<any>();
+  const [activityRecords,setActivityRecords] = useState<ActivityRecord[]>([]);
+  const actionRef = useRef<ActionType>();
+  const formRef = useRef<ProFormInstance>();
+  useEffect(() =>{
+    getFormSchema(definitionId).then(data =>{
+      if (data && data.schema){
+        setSchema(data.schema)
+      }
+    })
+    getTaskActivityRecordList(definitionId).then(list =>{
+      if (list){
+        setActivityRecords(list)
+      }
+    })
+  },[])
+
+  const makeCommentSubmit =async (values: { message: string }) => {
+    const res = await makeComment({
+      taskId,
+      definitionId,
+      message:values.message
+    })
+    if (res.success){
+      formRef.current?.resetFields()
+      actionRef.current?.reload()
+    }
+  }
+
+  const agreeSubmit = async (data: Approve) => {
+    const res = await agreeTask({
+      taskId,
+      message: data.message
+    })
+    return res.success
+  }
+  const refuseSubmit = async (data: Approve) => {
+    const res = await refuseTask({
+      taskId,
+      message: data.message
+    })
+    return res.success
+  }
+
+
   return (
     <PageContainer
       fixedHeader
-      extra={[
-        <Button key="app" type="primary">
-          审批
-        </Button>,
+      footer={[
+        <ApproveForm icon={<CloseCircleOutlined />} title="拒绝" onFinish={refuseSubmit}/>,
+        <ApproveForm icon={<CheckCircleOutlined />} buttonType="primary" title="通过" onFinish={agreeSubmit}/>,
       ]}
     >
       <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-        <ProCard title="审批信息">
-          <Form
-            form={commonForm}
-            layout="vertical"
-            size="large"
-            onAutoSubmit={console.log}
-          >
-            <Schema schema={normalSchema} />
-          </Form>
+        <ProCard split="vertical">
+          <ProCard title="审批概要" colSpan="30%">
+            <div>
+              <span>发起人:</span>
+              <Avatar style={{ backgroundColor: '#00a2ae', verticalAlign: 'middle', margin : "5px" }} size="default" >
+                U
+              </Avatar>
+              <span>User</span>
+            </div>
+            <div>
+              <span>当前审批人:</span>
+              <Avatar style={{ backgroundColor: '#00a2ae', verticalAlign: 'middle', margin : "5px" }} size="default" >
+                A
+              </Avatar>
+              <span>Admin</span>
+            </div>
+            <div>
+              <span>流程发起时间: </span>
+              <span>2023年3月29日</span>
+            </div>
+          </ProCard>
+          <ProCard title="审批内容" headerBordered>
+            <Form
+              form={commonForm}
+              layout="vertical"
+              size="large"
+              onAutoSubmit={console.log}
+            >
+              <Schema schema={schema} />
+            </Form>
+          </ProCard>
         </ProCard>
         <ProCard title="流程记录" >
           <Timeline>
@@ -131,8 +148,9 @@ const TaskDetails: React.FC = () => {
         <ProCard title="评论" >
 
           <ProList<any>
+            actionRef={actionRef}
             rowKey="id"
-            dataSource={dataSource}
+            request={(params => getTaskCommentList(definitionId,params))}
             showActions="hover"
             editable={{
               onSave: async (key, record, originRow) => {
@@ -142,14 +160,17 @@ const TaskDetails: React.FC = () => {
             }}
             metas={{
               title: {
-                dataIndex: 'name',
+                dataIndex: 'userName',
+              },
+              subTitle:{
+                dataIndex: 'time',
               },
               avatar: {
-                dataIndex: 'name',
+                dataIndex: 'userName',
                 render:(_,row) => {
                   return (
                     <Avatar style={{ backgroundColor: '#00a2ae', verticalAlign: 'middle', margin : "5px" }} size="default" >
-                      {row.name[0]}
+                      {row.userName[0]}
                     </Avatar>
                   )
                 }
@@ -159,23 +180,26 @@ const TaskDetails: React.FC = () => {
               },
               actions: {
                 render: (text, row, index, action) => [
-                  <a
-                    onClick={() => {
-                      action?.startEditable(row.id);
-                    }}
-                    key="link"
-                  >
-                    删除
-                  </a>,
                 ],
               },
             }}
           />
 
-          <Space.Compact style={{ width: '100%' }}>
-            <Input placeholder="发起对任务的指导意见"/>
-            <Button type="primary">发表</Button>
-          </Space.Compact>
+          <div style={{margin : "20px" }}>
+            <ProForm<{message: string; }>
+              formRef={formRef}
+              onFinish={makeCommentSubmit}
+            >
+              <ProFormTextArea
+                style={{width:"100%"}}
+                rules={[{ required: true, message: '评论不能为空' }]}
+                name="message"
+                tooltip="最长为 24 位"
+                placeholder="请输入评论"
+              />
+
+            </ProForm>
+          </div>
 
         </ProCard>
       </Space>
