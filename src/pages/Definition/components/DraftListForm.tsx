@@ -5,11 +5,12 @@ import React, {useRef} from 'react';
 import {
   CloudUploadOutlined,
   CodeSandboxOutlined,
+  DeleteOutlined,
   InboxOutlined,
   QuestionCircleOutlined
 } from "@ant-design/icons";
 import {Draft} from "@/services/flow/definition";
-import {getFlowDraftList, publishFlowDraft} from "@/services/flow/api";
+import {deleteFlowDraft, getFlowDraftList, publishFlowDraft} from "@/services/flow/api";
 import {success, tips} from "@/common/messages";
 import ConfirmButton from "@/components/ConfirmButton";
 
@@ -44,9 +45,12 @@ const DraftListForm: React.FC<Props> = (props) => {
           console.log(data)
           return data
         }}
+        pagination={{
+          defaultPageSize: 10,
+          showSizeChanger: false,
+        }}
         rowKey="id"
         headerTitle="流程草稿"
-        showActions="hover"
         metas={{
           title: {
             dataIndex: 'name'
@@ -88,6 +92,15 @@ const DraftListForm: React.FC<Props> = (props) => {
                 icon={<CloudUploadOutlined/>}
                 onConfirm={async e => {
                   const res =await publishFlowDraft(row.id)
+                  success(res)
+                  actionRef.current?.reload()
+                }}
+              />,
+              <ConfirmButton
+                label="删除" hint="确定将该流程草稿删除？" size="small" type="link" tip="将该流程草稿删除"
+                icon={<DeleteOutlined/>}
+                onConfirm={async e => {
+                  const res =await deleteFlowDraft(row.id)
                   success(res)
                   actionRef.current?.reload()
                 }}

@@ -4,15 +4,14 @@ import {
 } from '@ant-design/pro-components';
 import '@umijs/max';
 import React, {useRef, useState} from 'react';
-import {Space, Tag} from 'antd';
+import {Button, Space, Tag} from 'antd';
 
 
 import {
   copyForm,
   deleteForm,
   discardForm,
-  getFormList,
-  getFormSchemaByKey,
+  getFormList, getFormSchema,
   publishForm,
   resumeForm
 } from "@/services/form/api";
@@ -30,7 +29,8 @@ import {ModalSchema} from "@/components/Schema/ModalSchema";
 import ConfirmButton from "@/components/ConfirmButton";
 
 const FormList: React.FC = () => {
-  const [activeKey, setActiveKey] = useState<React.Key | undefined>('edit');
+  const [activeKey, setActiveKey] = useState<React.Key | undefined>('RUN');
+  const [keyword, setKeyword] = useState<String | undefined>();
   const actionRef = useRef<ActionType>();
 
   return (
@@ -38,10 +38,14 @@ const FormList: React.FC = () => {
       <ProList<any>
         actionRef={actionRef}
         rowKey={"id"}
-        request={getFormList}
+        request={params => getFormList({
+          ...params,
+          status:activeKey,
+          keyword
+        })}
         pagination={{
-          defaultPageSize: 16,
-          showSizeChanger: false,
+          defaultPageSize: 10,
+          showSizeChanger: true,
         }}
         showActions="hover"
         onItem={(record: any) => {
@@ -86,25 +90,33 @@ const FormList: React.FC = () => {
                 buttonText="查看"
                 title="预留（无数据操作）"
                 formId={row.id}
+                businessId={row.id}
                 request={async formId => {
-                  return getFormSchemaByKey(formId);
+                  return getFormSchema(formId);
                 }}
                 buttonType="link"
                 icon={<EyeOutlined/>}
               />,
               <ConfirmButton
                 label="编辑" hint="确认创建副本进行编辑？" size="small" type="link" tip="编辑将创建副本进行编辑"
-                icon={<FormOutlined/>} hidden={row.status === "DISCARD"}
+                icon={<FormOutlined/>} hidden={row.status !== "RUN"}
                 onConfirm={async e => {
                   const newFormId = await copyForm(row.id)
+                  setActiveKey("EDIT")
+                  actionRef.current?.reload()
                   tips("拷贝成功，将在新标签打开");
                   setTimeout(() => {
                     window.open(`/workflow/form/designable/${newFormId}`);
                   }, 500)
                 }}
               />,
+              <Button icon={<FormOutlined/>} type="link" hidden={row.status !== "EDIT"} onClick={async () => {
+                setTimeout(() => {
+                  window.open(`/workflow/form/designable/${row.id}`);
+                }, 500)
+              }}>编辑</Button>,
               <ConfirmButton
-                label="废弃" hint="确认？" size="small" type="link" tip="将表单置于不可用状态"
+                label="废弃" hint="确认废弃表单？" size="small" type="link" tip="将表单置于不可用状态"
                 icon={<CloseSquareOutlined/>} hidden={row.status !== "RUN"}
                 onConfirm={async () => {
                   const res = await discardForm(row.id);
@@ -115,11 +127,12 @@ const FormList: React.FC = () => {
                 }}
               />,
               <ConfirmButton
-                label="激活" hint="确认激活表单？" size="small" type="link" tip="将表单恢复正常状态"
+                label="激活" hint="确认激活表单？" size="small" type="link" tip="将表单恢复正常状态（仅支持最新）"
                 icon={<PlayCircleOutlined/>} hidden={row.status !== "DISCARD"}
                 onConfirm={async () => {
                   const res = await resumeForm(row.id);
                   success(res, "激活成功")
+                  setActiveKey("RUN")
                   if (res.success) {
                     actionRef.current?.reload()
                   }
@@ -142,6 +155,7 @@ const FormList: React.FC = () => {
                 onConfirm={async () => {
                   const res = await publishForm(row.id);
                   success(res, "发布成功")
+                  setActiveKey("RUN")
                   if (res.success) {
                     actionRef.current?.reload()
                   }
@@ -173,11 +187,13 @@ const FormList: React.FC = () => {
             ],
             onChange(key) {
               setActiveKey(key);
+              actionRef.current?.reload()
             },
           },
           search: {
             onSearch: (value: string) => {
-              alert(value);
+              setKeyword(value);
+              actionRef.current?.reload()
             },
           },
           actions: [

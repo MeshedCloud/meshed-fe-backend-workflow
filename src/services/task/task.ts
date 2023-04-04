@@ -2,6 +2,8 @@
 export class Task {
   id!: string
   definitionId!: string
+  formKey?: string
+  variables?: any
 
 }
 
@@ -15,12 +17,13 @@ export class Comment {
 
 export class CommentCmd {
   taskId!: string
-  definitionId!: string
+  instanceId!: string
   message!: string
 }
 
 export class CompleteTaskCmd {
   taskId!: string
+  instanceId!: string
   message!: string
 }
 
@@ -28,6 +31,6 @@ export class ActivityRecord {
   id!: string
   activityName!: string
   assigneeName!: string
-  message!: string
+  fullMessage!: string
   endTime!: string
 }

@@ -12,6 +12,7 @@ const getTaskList = (req: Request, res: Response) => {
       {
         "id": "owner1:1:e6578788-cbd2-11ed-9aed-004238a4ec73",
         "definitionId": "owner1:1:e6578788-cbd2-11ed-9aed-004238a4ec73",
+        "instanceId": "owner1:1:e6578788-cbd2-11ed-9aed-004238a4ec73",
         "category": "Test",
         "name": "name1",
         "owner": "owner1",
@@ -24,6 +25,7 @@ const getTaskList = (req: Request, res: Response) => {
       {
         "id": "owner1:2:f87276a0-cc34-11ed-ab9d-004238a4ec73",
         "definitionId": "owner1:2:f87276a0-cc34-11ed-ab9d-004238a4ec73",
+        "instanceId": "owner1:2:f87276a0-cc34-11ed-ab9d-004238a4ec73",
         "category": "Test",
         "name": "name1",
         "owner": "owner1",
@@ -36,6 +38,7 @@ const getTaskList = (req: Request, res: Response) => {
       {
         "id": "oa_leave_1:1:4ad50a02-ca30-11ed-91fe-004238a4ec73",
         "definitionId": "oa_leave_1:1:4ad50a02-ca30-11ed-91fe-004238a4ec73",
+        "instanceId": "oa_leave_1:1:4ad50a02-ca30-11ed-91fe-004238a4ec73",
         "category": "Default",
         "name": "HR审批",
         "owner": "oa_leave_1",
@@ -48,6 +51,7 @@ const getTaskList = (req: Request, res: Response) => {
       {
         "id": "oa_leave_1:2:6ac3d2eb-ca31-11ed-95f5-004238a4ec73",
         "definitionId": "oa_leave_1:2:6ac3d2eb-ca31-11ed-95f5-004238a4ec73",
+        "instanceId": "oa_leave_1:2:6ac3d2eb-ca31-11ed-95f5-004238a4ec73",
         "category": "Default",
         "name": "HR审批",
         "owner": "oa_leave_1",
@@ -60,6 +64,7 @@ const getTaskList = (req: Request, res: Response) => {
       {
         "id": "oa_leave_1:3:934ba60b-ca31-11ed-a0a8-004238a4ec73",
         "definitionId": "oa_leave_1:3:934ba60b-ca31-11ed-a0a8-004238a4ec73",
+        "instanceId": "oa_leave_1:3:934ba60b-ca31-11ed-a0a8-004238a4ec73",
         "category": "xxx",
         "name": "HR审批",
         "owner": "oa_leave_1",
@@ -72,6 +77,7 @@ const getTaskList = (req: Request, res: Response) => {
       {
         "id": "oa_leave_1:4:c126ed65-ca33-11ed-af31-004238a4ec73",
         "definitionId": "oa_leave_1:4:c126ed65-ca33-11ed-af31-004238a4ec73",
+        "instanceId": "oa_leave_1:4:c126ed65-ca33-11ed-af31-004238a4ec73",
         "category": "xxx",
         "name": "HR审批",
         "owner": "oa_leave_1",
@@ -85,6 +91,26 @@ const getTaskList = (req: Request, res: Response) => {
     "notEmpty": true,
     "totalPages": 6,
     "empty": false
+  });
+};
+const getTask = (req: Request, res: Response) => {
+  res.json({
+    "success": true,
+    "errCode": null,
+    "errMessage": null,
+    "data": {
+      "id": "owner1:1:e6578788-cbd2-11ed-9aed-004238a4ec73",
+      "definitionId": "owner1:1:e6578788-cbd2-11ed-9aed-004238a4ec73",
+      "instanceId": "owner1:1:e6578788-cbd2-11ed-9aed-004238a4ec73",
+      "category": "Test",
+      "name": "name1",
+      "owner": "owner1",
+      "description": null,
+      "assignee": "zhangsan",
+      "createTime": "2023年3月28日",
+      "dueDate": "2023年3月28日",
+      "claimTime": "1天"
+    },
   });
 };
 const getTaskActivityRecordList = (req: Request, res: Response) => {
@@ -168,8 +194,9 @@ const refuseTask = (req: Request, res: Response) => {
 
 export default {
   'GET /api/workflow/task/list': getTaskList,
+  'GET /api/workflow/task/query': getTask,
   'GET /api/workflow/task/activity/record/list/*': getTaskActivityRecordList,
-  'GET /api/workflow/task/comment/list/*': getTaskCommentList,
+  'GET /api/workflow/task/get/instance/comments/*': getTaskCommentList,
   'POST /api/workflow/task/make/comment': makeComment,
   'POST /api/workflow/task/agree': agreeTask,
   'POST /api/workflow/task/refuse': refuseTask,

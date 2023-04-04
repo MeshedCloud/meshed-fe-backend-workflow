@@ -29,11 +29,11 @@ export const registerNode = [{
     },
     {
       component: InitiatorNode,
-      popover: () => <div>流程发起人</div>,
+      popover: () => <div>流程提交</div>,
       name: 'initiatorEvent',
       width: 210,
       height: 65,
-      label: '发起人',
+      label: '提交',
     },
     {
       component: ApproveNode,

@@ -5,7 +5,7 @@ import {Cell} from "@antv/x6";
 import {IGraphCommandService, IModelService} from "@antv/xflow-core";
 import {
   getApproveControls, getConditionControls,
-  getDefaultControls, getEdgeControls, getEndControls, getExclusiveGatewayControls,
+  getDefaultControls, getEdgeControls, getEndControls, getExclusiveGatewayControls, getInitiatorControls,
   getMailControls,
   getParallelGatewayControls,
   getStartControls
@@ -56,6 +56,10 @@ const formSchemaService = async (args: {
   const {renderKey} = targetData ? targetData : {}
   const isGroup = args.targetData?.isGroup
 
+  if (targetData === undefined){
+    return getDefaultControls()
+  }
+
   if (isGroup) {
     // TODO
   }
@@ -69,6 +73,8 @@ const formSchemaService = async (args: {
         return getStartControls(targetData);
       case 'endEvent':
         return getEndControls();
+      case 'initiatorEvent':
+        return getInitiatorControls(targetData);
       case 'userTask':
         return getApproveControls(targetData);
       case 'exclusiveGateway':

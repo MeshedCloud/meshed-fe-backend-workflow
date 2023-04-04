@@ -6,7 +6,7 @@ export const InitiatorNode = (props: { size?: { width: number; height: number } 
   return (
     <NodeCard
       header={{
-        title: '发起人',
+        title: '提交',
         headerBackground: '#0a97ce',
       }}
       context={{

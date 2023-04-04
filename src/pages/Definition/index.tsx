@@ -1,8 +1,9 @@
 import {
+  ActionType,
   PageContainer, ProList,
 } from '@ant-design/pro-components';
 import '@umijs/max';
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {copyDefinition, getDefinitionList, initiateFlow, updateInvertedDefinitionState} from "@/services/flow/api";
 import {Button, message, Space, Tag, Tooltip} from 'antd';
 import {
@@ -15,18 +16,24 @@ import DraftListForm from "@/pages/Definition/components/DraftListForm";
 import DraftForm from "@/pages/Definition/components/DraftForm";
 import {success, tips} from "@/common/messages";
 import { ModalSchema } from '@/components/Schema/ModalSchema';
-import {getFormSchemaByKey} from "@/services/form/api";
+import {getFormSchema} from "@/services/form/api";
 import ConfirmButton from "@/components/ConfirmButton";
 
 const Definition: React.FC = () => {
-  const [activeKey, setActiveKey] = useState<React.Key | undefined>('ACTIVATE');
-
+  const [activeKey, setActiveKey] = useState<React.Key | undefined>('ACTIVE');
+  const [keyword, setKeyword] = useState<String | undefined>();
+  const actionRef = useRef<ActionType>();
   // @ts-ignore
   return (
     <PageContainer>
       <ProList<any>
+        actionRef={actionRef}
         rowKey={"id"}
-        request={getDefinitionList}
+        request={params => getDefinitionList({
+          ...params,
+          status: activeKey,
+          name: keyword
+        })}
         postData={data => {
           if (data && data.length > 0) {
             data.forEach(item => item.avatar = "https://s.meshed.cn/meshed/svg/flow.svg")
@@ -86,22 +93,6 @@ const Definition: React.FC = () => {
           actions: {
             cardActionProps: 'actions',
             render: (text, row) => [
-              <ModalSchema
-                buttonText="发起"
-                title="发起流程" icon={<SendOutlined />} buttonType="link"
-                formId={row.id}
-                request={async formId => {
-                  return getFormSchemaByKey(formId);
-                }}
-                onFinish={async (formId, formData) => {
-                  const res = await initiateFlow({
-                    formKey: formId,
-                    param: formData
-                  })
-                  success(res,"发起成功")
-                  return res.success
-                }}
-              />,
               <Button size="small" type="link" icon={<EyeOutlined />} onClick={() => {
                 tips("将在新标签打开");
                 setTimeout(() => {
@@ -127,6 +118,9 @@ const Definition: React.FC = () => {
                 onConfirm={async e => {
                   const res = await updateInvertedDefinitionState(row.id)
                   success(res)
+                  if (res.success) {
+                    actionRef.current?.reload()
+                  }
                 }}
               />,
               <ConfirmButton
@@ -135,6 +129,28 @@ const Definition: React.FC = () => {
                 onConfirm={async e => {
                   const res = await updateInvertedDefinitionState(row.id)
                   success(res)
+                  if (res.success) {
+                    actionRef.current?.reload()
+                  }
+                }}
+              />,
+              <ModalSchema
+                hidden={!row.hasStartFormKey}
+                buttonText="发起"
+                title="发起流程" icon={<SendOutlined />} buttonType="link"
+                formId={row.formKey}
+                businessId={row.key}
+                request={async formId => {
+                  return getFormSchema(formId);
+                }}
+                onFinish={async (formId, businessId,formData) => {
+                  const res = await initiateFlow({
+                    tenantId: row.tenantId,
+                    key: businessId,
+                    param: formData
+                  })
+                  success(res,"发起成功")
+                  return res.success
                 }}
               />,
             ]
@@ -149,7 +165,7 @@ const Definition: React.FC = () => {
             activeKey,
             items: [
               {
-                key: "ACTIVATE",
+                key: "ACTIVE",
                 label: '正常',
               },
               {
@@ -159,11 +175,13 @@ const Definition: React.FC = () => {
             ],
             onChange(key) {
               setActiveKey(key);
+              actionRef.current?.reload()
             },
           },
           search: {
             onSearch: (value: string) => {
-              alert(value);
+              setKeyword(value);
+              actionRef.current?.reload()
             },
           }
 

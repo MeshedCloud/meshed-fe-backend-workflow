@@ -1,5 +1,6 @@
 
 export class InitiateCmd {
-  formKey!: string
+  tenantId!: string
+  key!: string
   param!: object
 }

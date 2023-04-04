@@ -1,8 +1,9 @@
 import {
+  ActionType,
   PageContainer, ProList,
 } from '@ant-design/pro-components';
 import '@umijs/max';
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {Space, Tag} from 'antd';
 
 
@@ -12,13 +13,21 @@ import {history} from "@umijs/max";
 
 
 const TaskList: React.FC = () => {
-  const [activeKey, setActiveKey] = useState<React.Key | undefined>('task');
+  const [activeKey, setActiveKey] = useState<React.Key | undefined>('TODO');
+  const [keyword, setKeyword] = useState<React.Key | undefined>('');
+  const actionRef = useRef<ActionType>();
+
 
   return (
     <PageContainer>
       <ProList<any>
+        actionRef={actionRef}
         rowKey={"id"}
-        request={getTaskList}
+        request={params => getTaskList({
+          ...params,
+          type: activeKey,
+          name: keyword
+        })}
         search={{
           filterType: 'light',
         }}
@@ -34,7 +43,7 @@ const TaskList: React.FC = () => {
             onClick: () => {
               console.log(record);
               history.push({
-                pathname: `/task/details/${record.definitionId}/${record.id}`
+                pathname: `/task/details/${record.instanceId}/${record.id}`
               })
             },
           };
@@ -43,18 +52,17 @@ const TaskList: React.FC = () => {
         metas={{
           title: {
             search: false,
-            dataIndex: 'name'
+            dataIndex: 'definitionName'
+
           },
           subTitle: {
             search: false,
-            dataIndex: 'category',
+            dataIndex: 'name',
             render: (_,row) => {
               return (
               <Space size={1}>
-                <Tag color="blue">{_}</Tag>
-                <Tag color="#87d068">申请人：{row.owner}</Tag>
-                <Tag color="#2db7f5">{row.createTime}</Tag>
-                <Tag color="orange">处理：{row.claimTime}</Tag>
+                <Tag color="#87d068" hidden={activeKey === 'MY_INITIATION'}>{_}</Tag>
+                <Tag color="#2db7f5" hidden={!row.createTime}>{row.createTime}</Tag>
                 {row.dueDate ? <Tag color="magenta">截至：{row.dueDate}</Tag> : <></>}
               </Space>
               )
@@ -66,7 +74,7 @@ const TaskList: React.FC = () => {
             render: (_,row) => {
               return (
                 <div>
-                  <div>处理人: {row.assignee}</div>
+                  <div>{activeKey === 'MY_INITIATION' ? "申请人" :"处理人"}: {row.assignee}</div>
                 </div>
 
               )
@@ -106,13 +114,18 @@ const TaskList: React.FC = () => {
             ],
             onChange(key) {
               setActiveKey(key);
+              actionRef.current?.reload()
             },
           },
           search: {
             onSearch: (value: string) => {
-              alert(value);
+              setKeyword(value);
+              actionRef.current?.reload()
             },
-          }
+          },
+          actions: [
+
+          ]
 
         }}
 

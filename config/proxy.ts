@@ -17,10 +17,15 @@ export default {
    */
   test: {
     // localhost:8000/api/** -> https://preview.pro.ant.design/api/**
-    '/api/': {
+    '/api/iam/': {
       target: 'https://proapi.azurewebsites.net',
       changeOrigin: true,
-      pathRewrite: { '^': '' },
+      pathRewrite: { '^/api': '' },
+    },
+    '/api/workflow/': {
+      target: 'http://localhost:9989',
+      changeOrigin: true,
+      pathRewrite: { '^/api': '' },
     },
   },
   pre: {

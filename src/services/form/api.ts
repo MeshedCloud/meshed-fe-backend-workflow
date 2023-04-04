@@ -16,7 +16,7 @@ export async function getFormList(params: {}, options?: Record<string, any>) {
 export async function getFormSchema(formId: string) {
   const res = await Request.get<any>(`/api/workflow/form/get/schema/${formId}`, {});
   if (res.success && res.data){
-    return res.data
+    return JSON.parse(res.data)
   }
   return undefined
 }
@@ -24,7 +24,7 @@ export async function getFormSchema(formId: string) {
 export async function getFormSchemaByKey(formKey: string) {
   const res = await Request.get<any>(`/api/workflow/form/get/schema/key/${formKey}`, {});
   if (res.success && res.data){
-    return res.data
+    return JSON.parse(res.data)
   }
   return undefined
 }
@@ -56,7 +56,7 @@ export async function discardForm(formId: string) {
 
 /** 获取表单列表 POST /api/workflow/form/delete/${formId} */
 export async function deleteForm(formId: string) {
-  return await Request.post(`/api/workflow/form/delete/${formId}`);
+  return await Request.delete(`/api/workflow/form/delete/${formId}`);
 }
 
 /** 获取表单列表 POST /api/workflow/form/resume/${formId} */

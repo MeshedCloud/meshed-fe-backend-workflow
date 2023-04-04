@@ -257,6 +257,14 @@ const saveFlowDraft = (req: Request, res: Response) => {
   });
 };
 
+const deleteFlowDraft = (req: Request, res: Response) => {
+  res.json({
+    "success": true,
+    "errCode": null,
+    "errMessage": null,
+  });
+};
+
 const publishFlowDraft = (req: Request, res: Response) => {
   res.json({
     "success": true,
@@ -445,5 +453,6 @@ export default {
   'POST /api/workflow/flow/draft/publish/*': publishFlowDraft,
   'POST /api/workflow/definition/inverted/state/*': updateInvertedDefinitionState,
   'POST /api/workflow/definition/copy/*': copyDefinition,
+  'DELETE /api/workflow/flow/draft/delete/*': deleteFlowDraft,
 
 };

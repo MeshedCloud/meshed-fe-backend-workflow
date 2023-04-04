@@ -12,25 +12,31 @@ type IModalSchemaProps = {
   title: string
   buttonText: string
   formId: string
+  hidden?: boolean
   //系统自定义的业务ID 非必须
-  businessId?: string
+  businessId: string
   request: (formId: string) => Promise<any | undefined>;
   //初始化业务会携带业务ID和当前表单ID
-  initial?: (formId: string, businessId?: string) => Promise<any | undefined>;
-  onFinish?: (formId: string, formData: any) => Promise<boolean | void>;
+  initial?: (formId: string, businessId: string) => Promise<any | undefined>;
+  onFinish?: (formId: string, businessId: string, formData?: any) => Promise<boolean | void>;
   onCancel?: () => void;
   buttonType?: "link" | "text" | "ghost" | "default" | "primary" | "dashed" | undefined
   icon?: React.ReactNode;
 };
 
-export const ModalSchema = (props: IModalSchemaProps) => {
+export const ModalSchema: React.FC<IModalSchemaProps> = (
+  {
+    request, formId, businessId,title,initial, onFinish,onCancel,
+    hidden, buttonType, icon,buttonText
+  }) => {
   return (
     <FormDialog.Portal>
       <Button
-        type={props.buttonType}
-        icon={props.icon}
+        hidden={hidden === undefined ? false : hidden}
+        type={buttonType}
+        icon={icon}
         onClick={async () => {
-          const data = await props.request(props.formId);
+          const data = await request(formId);
           let schema: any = undefined;
           if (data) {
             if (data.schema) {
@@ -40,11 +46,11 @@ export const ModalSchema = (props: IModalSchemaProps) => {
             }
           }
           let initialValues: any = {};
-          if (props.initial) {
-            initialValues = await props.initial(props.formId, props.businessId);
+          if (initial) {
+            initialValues = await initial(formId, businessId);
           }
 
-          const dialog = FormDialog(props.title, () => {
+          const dialog = FormDialog(title, () => {
             return (
               <FormLayout labelCol={6} wrapperCol={10}>
                 <Schema schema={schema}/>
@@ -59,8 +65,8 @@ export const ModalSchema = (props: IModalSchemaProps) => {
               })
             })
             .forConfirm(async (payload, next) => {
-              if (props.onFinish) {
-                const op = await props.onFinish(props.formId, payload.values);
+              if (onFinish) {
+                const op = await onFinish(formId, businessId, payload.values);
                 if (op) {
                   //成功继续
                   next(payload)
@@ -72,8 +78,8 @@ export const ModalSchema = (props: IModalSchemaProps) => {
 
             })
             .forCancel((payload, next) => {
-              if (props.onCancel) {
-                props.onCancel()
+              if (onCancel) {
+                onCancel()
               }
               next(payload)
             })
@@ -81,7 +87,7 @@ export const ModalSchema = (props: IModalSchemaProps) => {
             .then(console.log)
         }}
       >
-        {props.buttonText}
+        {buttonText}
       </Button>
     </FormDialog.Portal>
   )

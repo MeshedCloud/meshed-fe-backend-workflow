@@ -5,12 +5,14 @@ export const selectShape = (props: { controlSchema: any }) => {
   const {controlSchema} = props
   const { required, tooltip, extra, name, label, placeholder,defaultValue ,options} = controlSchema
   const selectOption: any[] | undefined = []
-  options.forEach((item: { title: any; value: any; }) => {
-    selectOption.push({
-      label:item.title,
-      value:item.value
+  if (options && options.length > 0){
+    options.forEach((item: { title: any; value: any; }) => {
+      selectOption.push({
+        label:item.title,
+        value:item.value
+      })
     })
-  })
+  }
 
   return (
     <FormItemWrapper schema={controlSchema}>

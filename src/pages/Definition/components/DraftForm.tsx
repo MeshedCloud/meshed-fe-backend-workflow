@@ -76,7 +76,7 @@ export default (props: Props) => {
       />
       <ProFormSelect
         name="category"
-        request={getCategorySelect}
+        request={async params => getCategorySelect(params)}
         label="流程分类"
         placeholder="选择流程分类"
         rules={[{required: true, message: '选择流程分类!'}]}
