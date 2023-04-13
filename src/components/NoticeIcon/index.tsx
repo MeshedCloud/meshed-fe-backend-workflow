@@ -1,4 +1,4 @@
-import { getNotices } from '@/services/ant-design-pro/api';
+import { getNotices } from '@/services/user/api';
 import { useModel, useRequest } from '@umijs/max';
 import { message, Tag } from 'antd';
 import { groupBy } from 'lodash';

@@ -18,5 +18,6 @@ export default [
   {path: '/definition', name: '流程定义', icon: 'NodeIndexOutlined', component: './Definition'},
   {path: '/form', name: '动态表单', icon: 'CodeOutlined', component: './Form'},
   {path: '/', redirect: '/welcome'},
-  {path: '*', layout: false, component: './404'},
+  { path: '/error/:code', layout: false, component: './error' },
+  { path: '*', redirect: '/error/404' },
 ];
