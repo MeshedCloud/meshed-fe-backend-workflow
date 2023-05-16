@@ -29,16 +29,17 @@ import {
   ClockCircleOutlined,
   CloseCircleOutlined,
 } from "@ant-design/icons";
+import {formatDuring, timeToDate} from "@/common/time";
 
 export const readOnlyForm = createForm({
   validateFirst: true,
   values:{},
   readPretty: true
 })
-
+import {history} from "@umijs/max";
 const TaskDetails: React.FC = () => {
   // @ts-ignore
-  const {params: {instanceId, taskId}} = useMatch('/task/details/:instanceId/:taskId')
+  const {params: {type, instanceId, taskId}} = useMatch('/task/details/:type/:instanceId/:taskId')
   const [schema,setSchema] = useState<any>();
   const [schemaForm,setSchemaForm] = useState<any>(readOnlyForm);
   const [task,setTask] = useState<any>({});
@@ -52,7 +53,7 @@ const TaskDetails: React.FC = () => {
         setActivityRecords(list)
       }
     })
-    getTask({instanceId,taskId}).then(res => {
+    getTask({type,instanceId,taskId}).then(res => {
       if (res.success && res.data){
         setTask(res.data)
         if (res.data.formKey){
@@ -87,6 +88,9 @@ const TaskDetails: React.FC = () => {
       instanceId,
       message: data.message
     })
+    if (res.success){
+      history.back()
+    }
     return res.success
   }
   const refuseSubmit = async (data: Approve) => {
@@ -95,16 +99,19 @@ const TaskDetails: React.FC = () => {
       instanceId,
       message: data.message
     })
+    if (res.success){
+      history.back()
+    }
     return res.success
   }
 
   return (
     <PageContainer
       fixedHeader
-      footer={[
+      footer={type === "TODO" ?[
         <ApproveForm icon={<CloseCircleOutlined />} title="拒绝" onFinish={refuseSubmit}/>,
         <ApproveForm icon={<CheckCircleOutlined />} buttonType="primary" title="通过" onFinish={agreeSubmit}/>,
-      ]}
+      ]: []}
     >
       <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
         <ProCard split="vertical" style={{minHeight: "300px"}}>
@@ -119,7 +126,7 @@ const TaskDetails: React.FC = () => {
               </Avatar>
               <span>{task.initiator ? task.initiator : '未知'}</span>
             </div>
-            <div hidden={!task.assignee}>
+            <div hidden={!task.assignee || task.endTime !== undefined}>
               <span>当前审批人:</span>
               <Avatar style={{ backgroundColor: '#00a2ae', verticalAlign: 'middle', margin : "5px" }} size="default" >
                 {task.assignee ? task.assignee[0] : '未知'}
@@ -128,11 +135,19 @@ const TaskDetails: React.FC = () => {
             </div>
             <div hidden={!task.createTime}>
               <span>流程发起时间: </span>
-              <span>{task.createTime ? task.createTime : '未知'}</span>
+              <span>{task.createTime ? timeToDate(task.createTime) : '未知'}</span>
+            </div>
+            <div hidden={!task.endTime}>
+              <span>流程结束时间: </span>
+              <span>{task.endTime ? timeToDate(task.endTime) : '未知'}</span>
             </div>
             <div hidden={!task.dueDate}>
               <span>任务截至时间: </span>
-              <span>{task.dueDate ? task.dueDate : '未知'}</span>
+              <span>{task.dueDate ? timeToDate(task.dueDate) : '未知'}</span>
+            </div>
+            <div hidden={!task.claimTime}>
+              <span>流程审批时间: </span>
+              <span>{task.claimTime ? formatDuring(task.claimTime) : '未知'}</span>
             </div>
           </ProCard>
           <ProCard title="审批内容" headerBordered>
@@ -160,7 +175,7 @@ const TaskDetails: React.FC = () => {
                     justifyContent: 'space-between'
                   }}>
                     <div style={{fontSize: 18}}>{activityRecord.activityName}</div>
-                    <div style={{fontSize: 18}}>{activityRecord.endTime}</div>
+                    <div style={{fontSize: 18}}>{timeToDate(activityRecord.endTime)}</div>
                   </div>
                   <div hidden={!activityRecord.endTime && activityRecord.assigneeName === undefined}>
                     <Avatar style={{ backgroundColor: '#00a2ae', verticalAlign: 'middle', margin : "5px" }} size="default" >
@@ -170,10 +185,9 @@ const TaskDetails: React.FC = () => {
 
                   </div>
                   <div>
-                    {!activityRecord.endTime && activityRecord.assigneeName === undefined ? <span>待领取任务</span> : <></> }
-                  </div>
-                  <div>
-                    {!activityRecord.endTime ? <span>等待审批</span> : <Alert message={activityRecord.fullMessage} type="info" /> }
+                    {!activityRecord.endTime && activityRecord.assigneeName === undefined ? <span>待领取任务</span> :
+                      !activityRecord.endTime ? <span>等待审批</span> :
+                        activityRecord.fullMessage ? <Alert message={activityRecord.fullMessage} type="info" /> : <></> }
                   </div>
 
                 </Timeline.Item>
@@ -200,6 +214,11 @@ const TaskDetails: React.FC = () => {
               },
               subTitle:{
                 dataIndex: 'time',
+                render: (_,row) =>{
+                  return (
+                    timeToDate(row.time)
+                  )
+                }
               },
               avatar: {
                 dataIndex: 'userName',

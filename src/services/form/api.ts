@@ -2,6 +2,12 @@ import {Request} from '@/common/request';
 import type {PageParams} from '@/common/models';
 import {FormCmd, FormSchemaCmd} from "@/services/form/form";
 
+import {Engine} from '@designable/core'
+import {
+  transformToSchema,
+  transformToTreeNode,
+} from '@designable/formily-transformer'
+import {success} from "@/common/messages";
 
 /**
  * ==========表单===========
@@ -82,4 +88,24 @@ export async function getFormSelect(params?: {}, options?: { [key: string]: any 
       }
     }
   );
+}
+
+
+export const saveSchema = (designer: Engine, formId: string) => {
+  Request.post('/api/workflow/form/save/schema', {
+    id:formId,
+    schema: JSON.stringify(transformToSchema(designer.getCurrentTree()))
+  }).then(res =>{
+    success(res,"保存成功")
+  })
+}
+
+export const loadInitialSchema = async (designer: Engine, formId: string) => {
+  try {
+
+    designer.setCurrentTree(
+      transformToTreeNode(await getFormSchema(formId))
+    )
+  } catch {
+  }
 }

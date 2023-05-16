@@ -225,7 +225,6 @@ namespace NSToolbarConfig {
             saveGraphDataService: (meta, graphData) => {
               console.log(meta)
               if (meta.type == 'edit'){
-                console.log(JSON.stringify(graphData))
                 //简化数据
                 const graph = simplify(graphData);
                 console.log(JSON.stringify(graph))

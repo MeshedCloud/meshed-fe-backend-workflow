@@ -18,6 +18,7 @@ import {success, tips} from "@/common/messages";
 import { ModalSchema } from '@/components/Schema/ModalSchema';
 import {getFormSchema} from "@/services/form/api";
 import ConfirmButton from "@/components/ConfirmButton";
+import {category} from "@/services/flow/category";
 
 const Definition: React.FC = () => {
   const [activeKey, setActiveKey] = useState<React.Key | undefined>('ACTIVE');
@@ -69,8 +70,8 @@ const Definition: React.FC = () => {
             render: (_,row) => {
               return (
               <Space size={0}>
-                <Tag color="blue">{_}</Tag>
-                <Tag color={row.isSuspended ? "#f50" : "#5BD8A6"}>{row.isSuspended ? "挂起" : "激活"}</Tag>
+                <Tag color="blue">{category[row.category]}</Tag>
+                <Tag color={row.suspended ? "#f50" : "#5BD8A6"}>{row.suspended ? "挂起" : "激活"}</Tag>
               </Space>
               )
             }
@@ -114,7 +115,7 @@ const Definition: React.FC = () => {
               />,
               <ConfirmButton
                 label="激活" hint="确定激活流程？" size="small" type="link" tip="激活流程"
-                icon={<PlayCircleOutlined/>} hidden={!row.isSuspended}
+                icon={<PlayCircleOutlined/>} hidden={!row.suspended}
                 onConfirm={async e => {
                   const res = await updateInvertedDefinitionState(row.id)
                   success(res)
@@ -125,7 +126,7 @@ const Definition: React.FC = () => {
               />,
               <ConfirmButton
                 label="挂起" hint="确定挂起流程？" size="small" type="link" tip="挂起流程"
-                icon={<PauseCircleOutlined/>} hidden={row.isSuspended}
+                icon={<PauseCircleOutlined/>} hidden={row.suspended}
                 onConfirm={async e => {
                   const res = await updateInvertedDefinitionState(row.id)
                   success(res)
@@ -157,7 +158,7 @@ const Definition: React.FC = () => {
           }
         }}
         toolBarRender={() => [
-            <DraftListForm />,
+            <DraftListForm onCancel={() => actionRef.current?.reload()} />,
             <DraftForm />,
         ]}
         toolbar={{

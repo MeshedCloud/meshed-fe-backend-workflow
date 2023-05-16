@@ -87,8 +87,8 @@ const FormList: React.FC = () => {
           actions: {
             render: (text, row) => [
               <ModalSchema
-                buttonText="查看"
-                title="预留（无数据操作）"
+                buttonText="预览"
+                title="预览（无数据操作）"
                 formId={row.id}
                 businessId={row.id}
                 request={async formId => {
@@ -116,6 +116,18 @@ const FormList: React.FC = () => {
                 }, 500)
               }}>编辑</Button>,
               <ConfirmButton
+                label="发布" hint="确认发布表单？" size="small" type="link" tip="将表单置于运行状态"
+                icon={<SendOutlined/>} hidden={row.status !== "EDIT"}
+                onConfirm={async () => {
+                  const res = await publishForm(row.id);
+                  success(res, "发布成功")
+                  setActiveKey("RUN")
+                  if (res.success) {
+                    actionRef.current?.reload()
+                  }
+                }}
+              />,
+              <ConfirmButton
                 label="废弃" hint="确认废弃表单？" size="small" type="link" tip="将表单置于不可用状态"
                 icon={<CloseSquareOutlined/>} hidden={row.status !== "RUN"}
                 onConfirm={async () => {
@@ -140,7 +152,7 @@ const FormList: React.FC = () => {
               />,
               <ConfirmButton
                 label="删除" hint="确认删除表单？" size="small" type="link" tip="将表单清除"
-                icon={<DeleteOutlined/>} hidden={row.status !== "DISCARD"}
+                icon={<DeleteOutlined/>} hidden={row.status !== "DISCARD" && row.status !== "EDIT"}
                 onConfirm={async () => {
                   const res = await deleteForm(row.id);
                   success(res, "删除成功")
@@ -149,18 +161,7 @@ const FormList: React.FC = () => {
                   }
                 }}
               />,
-              <ConfirmButton
-                label="发布" hint="确认发布表单？" size="small" type="link" tip="将表单置于运行状态"
-                icon={<SendOutlined/>} hidden={row.status !== "EDIT"}
-                onConfirm={async () => {
-                  const res = await publishForm(row.id);
-                  success(res, "发布成功")
-                  setActiveKey("RUN")
-                  if (res.success) {
-                    actionRef.current?.reload()
-                  }
-                }}
-              />,
+
 
             ],
           },

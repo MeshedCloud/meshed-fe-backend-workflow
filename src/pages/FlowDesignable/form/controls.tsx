@@ -20,7 +20,7 @@ export const getDefaultControls = (): NsJsonSchemaForm.ISchema => {
 
 export const getStartControls = (schema: NsJsonSchemaForm.TargetData): NsJsonSchemaForm.ISchema => {
   // @ts-ignore
-  const {formKey} = schema
+  const {formKey, id, label} = schema
   const formSelect = JSON.parse(sessionStorage.getItem("formSelect") as string);
   return {
     tabs: [
@@ -30,6 +30,23 @@ export const getStartControls = (schema: NsJsonSchemaForm.TargetData): NsJsonSch
           {
             name: 'StartEvent',
             controls: [
+              {
+                label: '节点ID',
+                placeholder: '请输入节点ID',
+                name: 'id',
+                value: id,
+                disabled: true,
+                shape: ControlShape.INPUT,
+                required: true,
+              },
+              {
+                label: '节点名称',
+                placeholder: '请输入节点名称',
+                name: 'label',
+                value: label,
+                shape: ControlShape.INPUT,
+                required: true,
+              },
               {
                 label: '主表单',
                 tooltip: '挂载流程主要表单',
@@ -48,12 +65,37 @@ export const getStartControls = (schema: NsJsonSchemaForm.TargetData): NsJsonSch
 }
 
 
-export const getEndControls = (): NsJsonSchemaForm.ISchema => {
+export const getEndControls = (schema: NsJsonSchemaForm.TargetData): NsJsonSchemaForm.ISchema => {
+  // @ts-ignore
+  const {id, label} = schema
+
   return {
     tabs: [
       {
         name: '结束事件',
-        groups: [],
+        groups: [{
+          name: 'EndEvent',
+          controls: [
+            {
+              label: '节点ID',
+              placeholder: '请输入节点ID',
+              name: 'id',
+              value: id,
+              disabled: true,
+              shape: ControlShape.INPUT,
+              required: true,
+            },
+            {
+              label: '节点名称',
+              placeholder: '请输入节点名称',
+              name: 'label',
+              value: label,
+              shape: ControlShape.INPUT,
+              required: true,
+            }
+
+          ],
+        }]
       },
     ],
   }
@@ -64,12 +106,12 @@ export const getApproveControls = (schema: NsJsonSchemaForm.TargetData): NsJsonS
   const {userType,id, label, dataType, assignee, candidateUsers, candidateGroups, skipExpression, dynamicExpression} = schema
   const userSelectStr = sessionStorage.getItem("userSelect");
   let userSelect = []
-  if (userSelectStr){
+  if (userSelectStr) {
     userSelect = JSON.parse(userSelectStr as string);
   }
 
   let roleSelect = []
-  const roleSelectStr =  sessionStorage.getItem("roleSelect")
+  const roleSelectStr = sessionStorage.getItem("roleSelect")
   if (roleSelectStr) {
     roleSelect = JSON.parse(roleSelectStr as string);
   }
@@ -221,12 +263,8 @@ export const getApproveControls = (schema: NsJsonSchemaForm.TargetData): NsJsonS
                 placeholder: '请输入跳过条件的EL表达式',
                 name: 'skipExpression',
                 value: skipExpression,
-                shape: ControlShapeEnum.AUTO_COMPLETE,
-                required: false,
-                options: [{
-                  title: '自动完成',
-                  value: "${1==1}",
-                }]
+                shape: ControlShape.INPUT,
+                required: false
               },
             ],
           },
@@ -264,8 +302,8 @@ export const getInitiatorControls = (schema: NsJsonSchemaForm.TargetData): NsJso
                 required: true,
               },
               {
-                label: '跳过表达式',
-                tooltip: '跳过条件',
+                label: '是否自动完成',
+                tooltip: '是否自动完成',
                 placeholder: '请输入跳过条件的EL表达式',
                 name: 'autoComplete',
                 value: autoComplete,
@@ -280,23 +318,73 @@ export const getInitiatorControls = (schema: NsJsonSchemaForm.TargetData): NsJso
   }
 }
 
-export const getExclusiveGatewayControls = (): NsJsonSchemaForm.ISchema => {
+export const getExclusiveGatewayControls = (schema: NsJsonSchemaForm.TargetData): NsJsonSchemaForm.ISchema => {
+  // @ts-ignore
+  const {id,label} = schema;
   return {
     tabs: [
       {
         name: '网关配置',
-        groups: [],
+        groups: [
+          {
+            name: 'mail',
+            controls: [
+              {
+                label: '节点ID',
+                placeholder: '请输入节点ID',
+                name: 'id',
+                value: id,
+                disabled: true,
+                shape: ControlShape.INPUT,
+                required: true,
+              },
+              {
+                label: '节点名称',
+                placeholder: '请输入节点名称',
+                name: 'label',
+                value: label,
+                shape: ControlShape.INPUT,
+                required: true,
+              }
+            ],
+          },
+        ],
       },
     ],
   }
 }
 
-export const getParallelGatewayControls = (): NsJsonSchemaForm.ISchema => {
+export const getParallelGatewayControls = (schema: NsJsonSchemaForm.TargetData): NsJsonSchemaForm.ISchema => {
+  // @ts-ignore
+  const {id,label} = schema;
   return {
     tabs: [
       {
         name: '网关配置',
-        groups: [],
+        groups: [
+          {
+            name: 'mail',
+            controls: [
+              {
+                label: '节点ID',
+                placeholder: '请输入节点ID',
+                name: 'id',
+                value: id,
+                disabled: true,
+                shape: ControlShape.INPUT,
+                required: true,
+              },
+              {
+                label: '节点名称',
+                placeholder: '请输入节点名称',
+                name: 'label',
+                value: label,
+                shape: ControlShape.INPUT,
+                required: true,
+              }
+            ],
+          },
+        ],
       },
     ],
   }
@@ -338,6 +426,7 @@ export const getConditionControls = (schema: NsJsonSchemaForm.TargetData): NsJso
     ],
   }
 }
+
 export const getEdgeControls = (schema: NsJsonSchemaForm.TargetData): NsJsonSchemaForm.ISchema => {
   // @ts-ignore
   const {conditionExpression, id} = schema;
@@ -377,14 +466,14 @@ export const getEdgeControls = (schema: NsJsonSchemaForm.TargetData): NsJsonSche
 
 export const getMailControls = (schema: NsJsonSchemaForm.TargetData): NsJsonSchemaForm.ISchema => {
   // @ts-ignore
-  const {id} = schema;
+  const {id,label, to, cc, bcc, subject, htmlVar, skipExpression} = schema;
   return {
     tabs: [
       {
         name: '邮件配置',
         groups: [
           {
-            name: 'groupName',
+            name: 'mail',
             controls: [
               {
                 label: '节点ID',
@@ -395,6 +484,264 @@ export const getMailControls = (schema: NsJsonSchemaForm.TargetData): NsJsonSche
                 shape: ControlShape.INPUT,
                 required: true,
               },
+              {
+                label: '节点名称',
+                placeholder: '请输入节点名称',
+                name: 'label',
+                value: label,
+                shape: ControlShape.INPUT,
+                required: true,
+              },
+              {
+                label: '收件人',
+                tooltip: '邮件的收信人。可以使用逗号分隔的列表定义多个接收人',
+                placeholder: '请输入收件人',
+                name: 'to',
+                value: to,
+                shape: ControlShape.INPUT,
+                required: true,
+              },
+              {
+                label: '抄送人',
+                tooltip: '邮件的抄送人。可以使用逗号分隔的列表定义多个接收人',
+                placeholder: '请输入节点名称',
+                name: 'cc',
+                value: cc,
+                shape: ControlShape.INPUT,
+                required: false,
+              },
+              {
+                label: '密送',
+                tooltip: '邮件的密送人。可以使用逗号分隔的列表定义多个接收人',
+                placeholder: '请输入节点名称',
+                name: 'bcc',
+                value: bcc,
+                shape: ControlShape.INPUT,
+                required: false,
+              },
+              {
+                label: '主题',
+                placeholder: '请输入主题',
+                name: 'subject',
+                value: subject,
+                shape: ControlShape.INPUT,
+                required: true,
+              },
+              {
+                label: '邮件内容',
+                tooltip: '内容可使用EL表达式获取当前数据',
+                placeholder: '请输入节点名称',
+                name: 'htmlVar',
+                value: htmlVar,
+                shape: ControlShape.TEXTAREA,
+                required: true,
+              },
+              {
+                label: '跳过表达式',
+                tooltip: '跳过条件',
+                placeholder: '请输入跳过条件的EL表达式',
+                name: 'skipExpression',
+                value: skipExpression,
+                shape: ControlShape.INPUT,
+                required: false
+              }
+            ],
+          },
+        ],
+      },
+    ],
+  }
+}
+
+export const getWebHookControls = (schema: NsJsonSchemaForm.TargetData): NsJsonSchemaForm.ISchema => {
+  // @ts-ignore
+  const {id, label, requestMethod, requestHeaders, requestUrl, contentType, requestBody, requestTimeout, failStatusCodes, handleStatusCodes, skipExpression} = schema;
+  return {
+    tabs: [
+      {
+        name: 'Webhook配置',
+        groups: [
+          {
+            name: 'webhook',
+            controls: [
+              {
+                label: '节点ID',
+                placeholder: '请输入节点ID',
+                name: 'id',
+                value: id,
+                disabled: true,
+                shape: ControlShape.INPUT,
+                required: true,
+              },
+              {
+                label: '节点名称',
+                placeholder: '请输入节点名称',
+                name: 'label',
+                value: label,
+                shape: ControlShape.INPUT,
+                required: true,
+              },
+              {
+                label: '请求类型',
+                tooltip: '请求类型',
+                placeholder: '请选择请求类型',
+                name: 'requestMethod',
+                value: requestMethod,
+                defaultValue: 'GET',
+                shape: ControlShape.SELECT,
+                required: true,
+                options: [{
+                  title: 'GET',
+                  value: "GET",
+                }, {
+                  title: 'POST',
+                  value: "POST",
+                }, {
+                  title: 'PUT',
+                  value: "PUT",
+                }, {
+                  title: 'DELETE',
+                  value: "DELETE",
+                }]
+              },
+              {
+                label: '内容类型',
+                tooltip: 'JSON/表单',
+                placeholder: '请选择请求类型',
+                name: 'contentType',
+                value: contentType,
+                defaultValue: 'JSON',
+                shape: ControlShape.SELECT,
+                required: true,
+                options: [{
+                  title: 'JSON',
+                  value: "application/json",
+                }, {
+                  title: '表单',
+                  value: "application/x-www-form-urlencoded",
+                }]
+              },
+              {
+                label: '回调地址',
+                tooltip: '需要全地址，如果需要权限请在请求头中配置',
+                placeholder: '请输入回调地址',
+                name: 'requestUrl',
+                value: requestUrl,
+                shape: ControlShape.INPUT,
+                required: true,
+              },
+              {
+                label: '请求头',
+                tooltip: '行分隔的Http请求头。\n 如： Authorization: Basic aGFRlc3Q=',
+                placeholder: '请输入请求头',
+                name: 'requestHeaders',
+                value: requestHeaders,
+                shape: ControlShape.TEXTAREA,
+                required: false,
+              },
+              {
+                label: '请求数据',
+                tooltip: '根据内容类型填写，可使用EL表达式获取当前数据',
+                placeholder: '请输入请求数据',
+                name: 'requestBody',
+                value: requestBody,
+                shape: ControlShape.TEXTAREA,
+                required: false,
+              },
+              {
+                label: '超时时间',
+                tooltip: '请求超时时间。单位为毫秒\n' +
+                  '（例如 - 5000）。\n' +
+                  '默认值为“0”，即没有超时。',
+                placeholder: '超时时间',
+                name: 'requestTimeout',
+                value: requestTimeout,
+                shape: ControlShape.INPUT,
+                required: false,
+              },
+              {
+                label: '请求失败状态码',
+                tooltip: 'HTTP Status 代码多个可逗号分隔',
+                placeholder: '请输入请求失败状态码',
+                defaultValue: "400,401,403,500",
+                name: 'failStatusCodes',
+                value: failStatusCodes,
+                shape: ControlShape.INPUT,
+                required: false,
+              },
+              {
+                label: '请求成功状态码',
+                tooltip: 'HTTP Status 代码多个可逗号分隔',
+                placeholder: '请输入请求成功状态码',
+                name: 'handleStatusCodes',
+                value: handleStatusCodes,
+                defaultValue: "200",
+                shape: ControlShape.INPUT,
+                required: false,
+              },
+              {
+                label: '跳过表达式',
+                tooltip: '跳过条件',
+                placeholder: '请输入跳过条件的EL表达式',
+                name: 'skipExpression',
+                value: skipExpression,
+                shape: ControlShape.INPUT,
+                required: false
+              }
+            ],
+          },
+        ],
+      },
+    ],
+  }
+}
+
+export const getScsBindingControls = (schema: NsJsonSchemaForm.TargetData): NsJsonSchemaForm.ISchema => {
+  // @ts-ignore
+  const {id, label, binding, body} = schema;
+  return {
+    tabs: [
+      {
+        name: '内部事件配置',
+        groups: [
+          {
+            name: 'webhook',
+            controls: [
+              {
+                label: '节点ID',
+                placeholder: '请输入节点ID',
+                name: 'id',
+                value: id,
+                disabled: true,
+                shape: ControlShape.INPUT,
+                required: true,
+              },
+              {
+                label: '节点名称',
+                placeholder: '请输入节点名称',
+                name: 'label',
+                value: label,
+                shape: ControlShape.INPUT,
+                required: true,
+              },
+              {
+                label: 'MQ Binding',
+                tooltip: 'SCS所需要的Binding,需要流程中心以及配置了这个binding',
+                placeholder: '请输入回调地址',
+                name: 'binding',
+                value: binding,
+                shape: ControlShape.INPUT,
+                required: true,
+              },
+              {
+                label: '消息数据',
+                tooltip: '消息数据可使用EL表达式获取当前数据',
+                placeholder: '请输入消息数据',
+                name: 'body',
+                value: body,
+                shape: ControlShape.TEXTAREA,
+                required: true,
+              }
             ],
           },
         ],

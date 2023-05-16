@@ -13,11 +13,12 @@ import {Draft} from "@/services/flow/definition";
 import {deleteFlowDraft, getFlowDraftList, publishFlowDraft} from "@/services/flow/api";
 import {success, tips} from "@/common/messages";
 import ConfirmButton from "@/components/ConfirmButton";
+import {category} from "@/services/flow/category";
 
 export type Props = {
-
+  onCancel: () => void
 };
-const DraftListForm: React.FC<Props> = (props) => {
+const DraftListForm: React.FC<Props> = ({onCancel}) => {
   const actionRef = useRef<ActionType>();
   return (
     <ModalForm
@@ -31,7 +32,7 @@ const DraftListForm: React.FC<Props> = (props) => {
       autoFocusFirstInput
       modalProps={{
         destroyOnClose: true,
-        onCancel: () => console.log('run'),
+        onCancel
       }}
       submitter={false}
     >
@@ -60,7 +61,9 @@ const DraftListForm: React.FC<Props> = (props) => {
             render: (_,row) => {
               return (
                 <Space size={0}>
-                  <Tag color="blue">{_}</Tag>
+                  {
+                    row.category ? <Tag color="blue">{category[row.category]}</Tag>: <></>
+                  }
                 </Space>
               )
             }

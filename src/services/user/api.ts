@@ -45,7 +45,7 @@ export async function getRoleSelect(params?: {}, options?: { [key: string]: any 
     params,
     options,
     (value) => {
-      return { label: value.name, value: value.id };
+      return { label: value.name, value: value.access };
     },
   );
 }

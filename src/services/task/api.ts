@@ -11,14 +11,15 @@ import {ActivityRecord, CommentCmd, CompleteTaskCmd, Task} from "@/services/task
 export async function getTaskList(params: {}, options?: Record<string, any>) {
   return await Request.getPage<Task>('/api/workflow/task/list', <PageParams>params, options);
 }
+
 /** 获取任务列表 GET /api/workflow/task/list */
-export async function getTask(params: {instanceId: string,taskId: string}, options?: Record<string, any>) {
+export async function getTask(params: { type: string, instanceId: string, taskId: string }, options?: Record<string, any>) {
   return await Request.get<Task>('/api/workflow/task/query', params, options);
 }
 
 /** 获取任务活动节点列表 GET /api/workflow/task/list/${instanceId} */
-export async function getTaskActivityRecordList( params: {instanceId: string,taskId: string}) {
-  const res = await Request.getList<ActivityRecord>(`/api/workflow/task/activity/record/list`,params);
+export async function getTaskActivityRecordList(params: { instanceId: string, taskId: string }) {
+  const res = await Request.getList<ActivityRecord>(`/api/workflow/task/activity/record/list`, params);
   return res.data
 }
 

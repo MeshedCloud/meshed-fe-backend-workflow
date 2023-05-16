@@ -18,8 +18,8 @@ const getTaskList = (req: Request, res: Response) => {
         "owner": "owner1",
         "description": null,
         "assignee": "zhangsan",
-        "createTime": "2023年3月28日",
-        "dueDate": "2023年3月28日",
+        "createTime": 1681385214695,
+        "dueDate": 1681385214695,
         "claimTime": "1天"
       },
       {
@@ -31,8 +31,8 @@ const getTaskList = (req: Request, res: Response) => {
         "owner": "owner1",
         "description": null,
         "assignee": "zhangsan",
-        "createTime": "2023年3月28日",
-        "dueDate": "2023年3月28日",
+        "createTime": 1681385214695,
+        "dueDate": 1681385214695,
         "claimTime": "1天"
       },
       {
@@ -44,8 +44,8 @@ const getTaskList = (req: Request, res: Response) => {
         "owner": "oa_leave_1",
         "description": null,
         "assignee": "zhangsan",
-        "createTime": "2023年3月28日",
-        "dueDate": "2023年3月28日",
+        "createTime": 1681385214695,
+        "dueDate": 1681385214695,
         "claimTime": "1天"
       },
       {
@@ -57,8 +57,8 @@ const getTaskList = (req: Request, res: Response) => {
         "owner": "oa_leave_1",
         "description": "",
         "assignee": "zhangsan",
-        "createTime": "2023年3月28日",
-        "dueDate": "2023年3月28日",
+        "createTime": 1681385214695,
+        "dueDate": 1681385214695,
         "claimTime": "1天"
       },
       {
@@ -70,8 +70,8 @@ const getTaskList = (req: Request, res: Response) => {
         "owner": "oa_leave_1",
         "description": "任务描述",
         "assignee": "zhangsan",
-        "createTime": "2023年3月28日",
-        "dueDate": "2023年3月28日",
+        "createTime": 1681385214695,
+        "dueDate": 1681385214695,
         "claimTime": "1天"
       },
       {
@@ -83,8 +83,8 @@ const getTaskList = (req: Request, res: Response) => {
         "owner": "oa_leave_1",
         "description": null,
         "assignee": "zhangsan",
-        "createTime": "2023年3月28日",
-        "dueDate": "2023年3月28日",
+        "createTime": 1681385214695,
+        "dueDate": 1681385214695,
         "claimTime": "1天"
       }
     ],
@@ -107,8 +107,8 @@ const getTask = (req: Request, res: Response) => {
       "owner": "owner1",
       "description": null,
       "assignee": "zhangsan",
-      "createTime": "2023年3月28日",
-      "dueDate": "2023年3月28日",
+      "createTime": 1681385214695,
+      "dueDate": 1681385214695,
       "claimTime": "1天"
     },
   });

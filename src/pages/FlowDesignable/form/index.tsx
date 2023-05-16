@@ -7,8 +7,8 @@ import {
   getApproveControls, getConditionControls,
   getDefaultControls, getEdgeControls, getEndControls, getExclusiveGatewayControls, getInitiatorControls,
   getMailControls,
-  getParallelGatewayControls,
-  getStartControls
+  getParallelGatewayControls, getScsBindingControls,
+  getStartControls, getWebHookControls
 } from "@/pages/FlowDesignable/form/controls";
 import {controlMapService} from "@/pages/FlowDesignable/form/custom-shapes";
 
@@ -72,19 +72,23 @@ const formSchemaService = async (args: {
       case 'startEvent':
         return getStartControls(targetData);
       case 'endEvent':
-        return getEndControls();
+        return getEndControls(targetData);
       case 'initiatorEvent':
         return getInitiatorControls(targetData);
       case 'userTask':
         return getApproveControls(targetData);
       case 'exclusiveGateway':
-        return getExclusiveGatewayControls();
+        return getExclusiveGatewayControls(targetData);
       case 'parallelGateway':
-        return getParallelGatewayControls();
+        return getParallelGatewayControls(targetData);
       case 'condition':
         return getConditionControls(targetData);
       case 'mailEvent':
-        return getMailControls();
+        return getMailControls(targetData);
+      case 'webHookEvent':
+        return getWebHookControls(targetData);
+      case 'scsBinderEvent':
+        return getScsBindingControls(targetData);
     }
   }
 

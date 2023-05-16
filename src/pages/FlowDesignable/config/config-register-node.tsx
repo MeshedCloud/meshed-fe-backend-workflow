@@ -5,6 +5,8 @@ import {ExclusiveGatewayNode} from "@/pages/FlowDesignable/node/exclusive-gatewa
 import {ParallelGatewayNode} from "@/pages/FlowDesignable/node/parallel-gateway";
 import {MailNode} from "@/pages/FlowDesignable/node/mail";
 import {InitiatorNode} from "@/pages/FlowDesignable/node/initiator";
+import {WebHook} from "@/pages/FlowDesignable/node/web-hook";
+import {ScsBinder} from "@/pages/FlowDesignable/node/scs-binder";
 // import {ConditionNode} from "@/pages/FlowDesignable/node/condition";
 
 export const registerNode = [{
@@ -79,6 +81,22 @@ export const registerNode = [{
   title: '事件节点',
   nodes: [
     {
+      component: WebHook,
+      popover: () => <div>钩子事件</div>,
+      name: 'webHookEvent',
+      width: 210,
+      height: 65,
+      label: '钩子事件',
+    },
+    {
+      component: ScsBinder,
+      popover: () => <div>产生MQ消息（内容服务）</div>,
+      name: 'scsBinderEvent',
+      width: 210,
+      height: 65,
+      label: 'MQ消息',
+    },
+    {
       component: MailNode,
       popover: () => <div>邮件事件</div>,
       name: 'mailEvent',
@@ -86,5 +104,6 @@ export const registerNode = [{
       height: 65,
       label: '邮件事件',
     },
+
   ],
 }]

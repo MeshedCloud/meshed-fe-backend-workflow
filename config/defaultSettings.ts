@@ -17,7 +17,7 @@ const Settings: LayoutSettings & {
   colorWeak: false,
   title: '流程中心',
   pwa: false,
-  logo: 'https://s.meshed.cn/meshed/svg/logo-no-background.svg',
+  logo: 'https://s.meshed.cn/meshed/svg/logo.svg',
   iconfontUrl: '',
 };
 

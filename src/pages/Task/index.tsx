@@ -10,6 +10,7 @@ import {Space, Tag} from 'antd';
 import {getTaskList} from "@/services/task/api";
 
 import {history} from "@umijs/max";
+import {formatDuring, timeToDate} from "@/common/time";
 
 
 const TaskList: React.FC = () => {
@@ -43,7 +44,7 @@ const TaskList: React.FC = () => {
             onClick: () => {
               console.log(record);
               history.push({
-                pathname: `/task/details/${record.instanceId}/${record.id}`
+                pathname: `/task/details/${activeKey}/${record.instanceId}/${record.id}`
               })
             },
           };
@@ -61,9 +62,10 @@ const TaskList: React.FC = () => {
             render: (_,row) => {
               return (
               <Space size={1}>
-                <Tag color="#87d068" hidden={activeKey === 'MY_INITIATION'}>{_}</Tag>
-                <Tag color="#2db7f5" hidden={!row.createTime}>{row.createTime}</Tag>
-                {row.dueDate ? <Tag color="magenta">截至：{row.dueDate}</Tag> : <></>}
+                <Tag color="#87d068" hidden={!(activeKey === 'TODO')}>{_}</Tag>
+                <Tag color="#2db7f5">{timeToDate(row.createTime)}{row.endTime ? "-" + timeToDate(row.endTime) : ""}</Tag>
+                <Tag color={row.endTime ? "#3498db" : "#00adb5"}>{row.endTime ? "已完成" : "进行中"}</Tag>
+                <Tag color="#70a1d7" hidden={!row.claimTime}>{row.claimTime ? formatDuring(row.claimTime) : '未知'}</Tag>
               </Space>
               )
             }
@@ -74,21 +76,12 @@ const TaskList: React.FC = () => {
             render: (_,row) => {
               return (
                 <div>
-                  <div>{activeKey === 'MY_INITIATION' ? "申请人" :"处理人"}: {row.assignee}</div>
+                  <div>{activeKey === 'TODO' ? "处理人": "申请人" }: {row.assignee ? row.assignee : "您可以处理"}</div>
                 </div>
 
               )
             }
-          },
-          suspended: {
-            // 自己扩展的字段，主要用于筛选，不在列表中显示
-            title: '状态',
-            valueType: "select",
-            valueEnum: {
-              true: '挂起',
-              false: '正常'
-            },
-          },
+          }
         }}
         headerTitle="流程管理"
         toolBarRender={() => [
@@ -101,16 +94,18 @@ const TaskList: React.FC = () => {
             items: [
               {
                 key: 'TODO',
-                label: '待办任务',
+                label: '待办',
               },
               {
-                key: 'COMPLETE',
-                label: '已办任务',
+                key: 'HISTORY',
+                label: '已办',
               },
               {
-                key: 'MY_INITIATION',
-                label: '发起记录',
+                key: 'MY',
+                label: '已发起',
               },
+
+
             ],
             onChange(key) {
               setActiveKey(key);

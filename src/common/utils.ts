@@ -4,7 +4,7 @@ export const convertVersion = (version: number | undefined) => {
   }
   //获取第一位 major and minor
 
-  let major = version / 10000;
+  const major = version / 10000;
   let minor = 0;
   if (version > 100) {
     minor = (version % 1000) / 100

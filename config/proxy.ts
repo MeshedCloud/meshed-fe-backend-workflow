@@ -10,7 +10,21 @@
  * @doc https://umijs.org/docs/guides/proxy
  */
 export default {
-  dev: {},
+  /**
+   * 网关代理
+   */
+  dev: {
+    '/api/iam/': {
+      target: 'https://oauth2.meshed.cn',
+      changeOrigin: true,
+      pathRewrite: { '^/api': '' },
+    },
+    '/api/workflow/': {
+      target: 'http://114.132.234.23:9989',
+      changeOrigin: true,
+      pathRewrite: { '^/api': '' },
+    },
+  },
   /**
    * @name 详细的代理配置
    * @doc https://github.com/chimurai/http-proxy-middleware
@@ -18,7 +32,7 @@ export default {
   test: {
     // localhost:8000/api/** -> https://preview.pro.ant.design/api/**
     '/api/iam/': {
-      target: 'http://localhost:7989',
+      target: 'https://oauth2.meshed.cn',
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },

@@ -1,16 +1,17 @@
 import  { useEffect } from 'react'
 import { Space, Button, Radio } from 'antd'
 import { useDesigner, TextWidget } from '@designable/react'
-import { GlobalRegistry } from '@designable/core'
+import {Engine, GlobalRegistry} from '@designable/core'
 import { observer } from '@formily/react'
-import { loadInitialSchema, saveSchema } from '../service'
 export interface IProps {
   formId: string
+  loadInitialSchema: (designer: Engine, formId: string) => void
+  save: (designer: Engine, formId: string) => void;
 }
 export const ActionsWidget = observer((props: IProps) => {
   const designer = useDesigner()
   useEffect(() => {
-    loadInitialSchema(designer,props.formId)
+    props.loadInitialSchema(designer,props.formId)
   }, [])
   //'ko-kr'
   const supportLocales = ['zh-cn', 'en-us']
@@ -36,7 +37,7 @@ export const ActionsWidget = observer((props: IProps) => {
       <Button
         type="primary"
         onClick={() => {
-          saveSchema(designer,props.formId)
+          props.save(designer,props.formId)
         }}
       >
         <TextWidget>Save</TextWidget>
